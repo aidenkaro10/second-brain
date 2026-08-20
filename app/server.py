@@ -196,4 +196,5 @@ def save():
 if __name__ == "__main__":
     if not ANTHROPIC_API_KEY:
         raise SystemExit("ANTHROPIC_API_KEY is missing from .env")
-    app.run(host="127.0.0.1", port=5001, debug=False)
+    # 0.0.0.0 means other devices on your WiFi (like your phone) can reach it.
+    app.run(host="0.0.0.0", port=5001, debug=False)
