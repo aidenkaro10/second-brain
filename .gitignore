@@ -17,3 +17,4 @@ scripts/.ingest_state.json
 
 # macOS
 .DS_Store
+scripts/.ingest_lock

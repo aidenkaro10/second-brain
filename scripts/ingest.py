@@ -290,6 +290,18 @@ def process_link(url, vault):
 
 
 def main():
+    # Only one ingest can run at a time. If another run is already going
+    # (cron and a manual run at once), skip. This prevents duplicate notes.
+    lock = ROOT / "scripts" / ".ingest_lock"
+    if lock.exists():
+        # A stale lock (from a crash) older than 2 hours is ignored.
+        if time.time() - lock.stat().st_mtime < 7200:
+            print("Another ingest is already running. Skipping.")
+            return
+    lock.write_text(str(os.getpid()))
+    import atexit
+    atexit.register(lambda: lock.unlink(missing_ok=True))
+
     # Fail fast if secrets are missing.
     missing = [name for name, val in [
         ("TELEGRAM_BOT_TOKEN", TELEGRAM_BOT_TOKEN),

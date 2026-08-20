@@ -15,6 +15,17 @@ Hooks that open with a bold claim against what the audience believes or has inve
 - The on-screen text stacks credibility ("22 Y/O CTO") on top of the contrarian claim, answering "why should I listen to you" in the same 3 seconds.
 - The video then pivots from the problem statement to an actionable roadmap, so the contrarian claim is a setup, not the whole video.
 
+### "Nvidia's CEO would rather be a degenerate" (TikTok, @jin-oo-kim)
+
+> **Spoken:** "You know what I'll admit, might not be the best in"
+>
+> **On-screen text:** "Nvidia's CEO would rather be a degenerate"
+
+**Why it works:**
+- Strong language ("degenerate") applied to a billionaire CEO grabs immediate curiosity.
+- A quick screenshot of the real interview right after the hook establishes credibility.
+- The payoff subverts grindset culture, so the shocking framing leads to a relatable message.
+
 ## Related
 
 - Pairs with urgency framing at the end of the video: see [[platform-tactics]] for the "you'll be replaced" close.
@@ -23,3 +34,4 @@ Hooks that open with a bold claim against what the audience believes or has inve
 ## Sources
 
 - 2026-08-20-swerikcodes.md
+- 2026-08-20-jin-oo-kim.md (in business/raw/processed, tagged #business)
