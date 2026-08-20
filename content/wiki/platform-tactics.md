@@ -14,11 +14,18 @@ Same video ends with: "because if you don't know this, you're simply going to ge
 
 **Why it works:** a high-stakes warning as the final line drives comments and shares (fear + stakes), right at the moment the viewer decides whether to engage.
 
+### Kinetic text animations
+
+Seen in the @alexeubank2-0 "slow motion is better than no motion" TikTok: bold, center-aligned subtitles that highlight key phrases in sync with the audio, changing with almost every cut.
+
+**Why it works:** keeps reader focus locked to the current phrase being spoken, so viewers who watch muted still get the full message, and the changing text gives the eye something new every couple seconds.
+
 ## Related
 
-- [[hooks/contrarian]] for the opening of the same video.
-- [[formats]] for its overall structure.
+- [[hooks/contrarian]] and [[hooks/motivational]] for the openings of these videos.
+- [[formats]] for their overall structure.
 
 ## Sources
 
 - 2026-08-20-swerikcodes.md
+- 2026-08-20-alexeubank2-0.md

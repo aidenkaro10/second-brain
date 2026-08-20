@@ -24,6 +24,16 @@ When asked to compile (or when new files exist in a vault's `raw/`):
 5. Update `wiki/index.md` so it lists every wiki file with a one-line description.
 6. Move the processed raw file into `raw/processed/`.
 
+## How to answer
+
+1. Short, simple, concise. No preambles, no filler.
+2. Plain language. Explain like Aiden is not a professional developer.
+3. Any how-to answer uses numbered steps, one action per step.
+4. Say exactly what to click or type, never "configure X".
+5. Casual tone, short sentences, no em dashes, no corporate speak.
+6. If an idea is bad, say so directly and give the better way.
+7. Banned words: "delve", "leverage", "furthermore", "it's worth noting", "comprehensive", "seamless".
+
 ## Constraints
 
 - Never delete information while compiling. Merging can reorganize, never erase.

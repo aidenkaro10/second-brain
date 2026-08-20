@@ -262,8 +262,12 @@ def parse_message(text):
 def process_link(url, vault):
     """Run the whole pipeline for one link. Returns the saved note's filename."""
     prompt = PROMPT_FILE.read_text()
-    # Tell Gemini the source URL so it can fill in the frontmatter.
-    prompt = prompt + "\n\nThe video URL is: %s\n" % url
+    # Give Gemini the facts it can't know on its own, for the frontmatter:
+    # the source URL, today's real date, and the creator handle from yt-dlp.
+    prompt = prompt + (
+        "\n\nThe video URL is: %s\nToday's date is: %s\nThe creator is: %s\n"
+        % (url, date.today().isoformat(), get_creator_slug(url))
+    )
 
     platform = detect_platform(url)
     if platform == "unknown":

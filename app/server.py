@@ -130,10 +130,14 @@ def chat():
     context = context[:MAX_CONTEXT_CHARS]
 
     system_prompt = (
+        read_if_exists(ROOT / "CLAUDE.md") + "\n\n"
         "You are the librarian for a personal knowledge base called Second Brain. "
         "Answer using ONLY the wiki content provided below. Do not use general knowledge. "
         "If the wiki does not contain the answer, say so and suggest what kind of source to add. "
-        "When sources disagree, present the disagreement explicitly.\n\n"
+        "When sources disagree, present the disagreement explicitly. "
+        "Style: short, simple, concise answers with no filler. Use numbered steps "
+        "for how-to explanations, one action per step. Write like a real person "
+        "talking, no corporate tone, no em dashes.\n\n"
         "==== WIKI CONTEXT ====\n\n" + context
     )
 
