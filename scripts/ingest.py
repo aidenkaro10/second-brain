@@ -218,7 +218,13 @@ def trigger_compile():
     Ask the claude CLI (headless mode) to compile new raw files into the wikis.
     If the CLI isn't installed, just log it; you can compile manually later.
     """
-    if shutil.which("claude") is None:
+    # Find the claude CLI. Cron runs with a minimal PATH, so also check
+    # the default install location (~/.local/bin).
+    claude_bin = shutil.which("claude") or (
+        str(Path.home() / ".local" / "bin" / "claude")
+        if (Path.home() / ".local" / "bin" / "claude").exists() else None
+    )
+    if claude_bin is None:
         print("claude CLI not found. Skipping compilation. Run it manually: "
               'claude -p "Compile new raw files per CLAUDE.md"')
         return
@@ -226,7 +232,7 @@ def trigger_compile():
     try:
         subprocess.run(
             [
-                "claude", "-p",
+                claude_bin, "-p",
                 "New files were added to one or more vaults' raw/ folders. "
                 "Compile them into the wikis following the compile procedure in CLAUDE.md.",
                 "--permission-mode", "acceptEdits",
