@@ -1,0 +1,19 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+
+# Downloaded videos (temp files from yt-dlp)
+*.mp4
+*.webm
+*.mkv
+*.mov
+tmp_videos/
+
+# Local state
+scripts/.ingest_state.json
+
+# macOS
+.DS_Store
