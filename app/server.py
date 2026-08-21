@@ -65,9 +65,10 @@ def matched_wiki_files(vault, query):
         return []
     # Words of 3+ letters from the question, lowercased.
     query_words = [w for w in re.findall(r"[a-z0-9]{3,}", query.lower())]
-    files = [p for p in wiki.rglob("*.md") if p.name != "index.md"]
+    files = [p for p in wiki.rglob("*.md") if p.name not in ("index.md", "overview.md")]
     scored = [(score_file(p, query_words), p) for p in files]
-    scored = [(s, p) for s, p in scored if s > 0]
+    # Include ALL files, best matches first. The vaults are small enough to
+    # send everything; the context cap in build_context trims if needed.
     scored.sort(key=lambda pair: pair[0], reverse=True)
     return scored
 
@@ -82,6 +83,7 @@ def build_context(vault, query):
     base = ROOT / vault
     parts.append("### %s/CLAUDE.md\n\n%s" % (vault, read_if_exists(base / "CLAUDE.md")))
     parts.append("### %s/wiki/index.md\n\n%s" % (vault, read_if_exists(base / "wiki" / "index.md")))
+    parts.append("### %s/wiki/overview.md\n\n%s" % (vault, read_if_exists(base / "wiki" / "overview.md")))
 
     total_score = 0
     for score, path in matched_wiki_files(vault, query)[:8]:

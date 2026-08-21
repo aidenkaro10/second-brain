@@ -22,7 +22,8 @@ When asked to compile (or when new files exist in a vault's `raw/`):
 3. Prefer updating existing wiki files over creating duplicates.
 4. Add `[[wikilinks]]` between related notes.
 5. Update `wiki/index.md` so it lists every wiki file with a one-line description.
-6. Move the processed raw file into `raw/processed/`.
+6. Update `wiki/overview.md`: each vault keeps a living overview of Aiden's projects, goals, and current state in that area of life. If a new raw file reveals something about what Aiden is working on, learning, or deciding, fold it into the overview. Keep it short and current, newest developments first.
+7. Move the processed raw file into `raw/processed/`.
 
 ## How to answer
 
