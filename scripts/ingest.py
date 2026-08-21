@@ -267,21 +267,27 @@ def trigger_compile():
 # ---------- Main flow ----------
 
 def parse_message(text):
-    """Pull the link and the vault tag out of a Telegram message."""
+    """
+    Pull the link and the tag out of a Telegram message.
+    Returns (url, vault, kind). The kind picks the extraction prompt:
+    #advice saves to the content vault but extracts lessons, not hooks.
+    """
     url_match = re.search(r"https?://\S+", text)
     if not url_match:
-        return None, None
+        return None, None, None
     url = url_match.group(0)
-    vault = DEFAULT_VAULT
-    tag_match = re.search(r"#(school|content|business)", text.lower())
+    vault, kind = DEFAULT_VAULT, DEFAULT_VAULT
+    tag_match = re.search(r"#(school|content|business|advice)", text.lower())
     if tag_match:
-        vault = tag_match.group(1)
-    return url, vault
+        tag = tag_match.group(1)
+        vault = "content" if tag == "advice" else tag
+        kind = tag
+    return url, vault, kind
 
 
-def process_link(url, vault):
+def process_link(url, vault, kind=None):
     """Run the whole pipeline for one link. Returns the saved note's filename."""
-    prompt = prompt_for_vault(vault)
+    prompt = prompt_for_vault(kind or vault)
     # Give Gemini the facts it can't know on its own, for the frontmatter:
     # the source URL, today's real date, and the creator handle from yt-dlp.
     prompt = prompt + (
@@ -359,17 +365,17 @@ def main():
             continue
 
         text = message.get("text") or message.get("caption") or ""
-        url, vault = parse_message(text)
+        url, vault, kind = parse_message(text)
         if not url:
             reply("No link found in that message. Send a YouTube, TikTok, or Instagram link, "
-                  "optionally with #school, #content, or #business.")
+                  "optionally with #school, #content, #business, or #advice.")
             state["processed_message_ids"].append(msg_id)
             continue
 
         # One bad link must never kill the whole run.
         try:
             print("Processing %s -> %s vault" % (url, vault))
-            path = process_link(url, vault)
+            path = process_link(url, vault, kind)
             reply("Saved: %s (%s vault)" % (path.name, vault))
             saved_any = True
         except Exception as e:

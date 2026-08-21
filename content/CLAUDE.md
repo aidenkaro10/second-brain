@@ -23,3 +23,7 @@ Each pattern file must keep:
 5. `## Sources` at the bottom listing the raw filenames the content came from.
 
 When a new breakdown arrives in `raw/`, file each of its findings under the matching pattern. One video usually feeds several pattern files.
+
+## Advice videos (#advice)
+
+Some raw files are ADVICE about making content, not viral examples. You can tell by their sections (CORE LESSON, FRAMEWORKS AND STEPS) instead of HOOK / SCENE-BY-SCENE. Compile these into `strategy/` with one file per topic (e.g. `strategy/hooks-advice.md`, `strategy/posting-cadence.md`, `strategy/algorithm.md`). Keep the frameworks complete, quotes verbatim, and numbers when given. Never mix advice into the pattern files, patterns hold examples, strategy holds instructions. Link them where related (a hooks advice file links to the hook pattern files it talks about).
