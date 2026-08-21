@@ -112,8 +112,10 @@ def ydl_opts_for(url):
     """
     opts = {"quiet": True, "no_warnings": True}
     if "instagram.com" in url:
-        # Chrome keeps Aiden's login under "Profile 1", not "Default".
-        opts["cookiesfrombrowser"] = ("chrome", "Profile 1", None, None)
+        # Instagram needs a logged-in session, borrowed from Chrome.
+        # Which Chrome profile holds the login is set in .env.
+        profile = os.getenv("CHROME_PROFILE", "Default")
+        opts["cookiesfrombrowser"] = ("chrome", profile, None, None)
     return opts
 
 
