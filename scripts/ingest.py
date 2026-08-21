@@ -44,8 +44,17 @@ GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 # so nothing gets processed twice.
 STATE_FILE = ROOT / "scripts" / ".ingest_state.json"
 
-# The extraction prompt we send to Gemini along with each video.
-PROMPT_FILE = ROOT / "prompts" / "gemini-extraction.md"
+# The extraction prompts we send to Gemini along with each video.
+# Each vault has its own: content wants hooks/scenes, school wants study
+# material, business wants the lesson. Falls back to the content one.
+PROMPT_DIR = ROOT / "prompts"
+
+
+def prompt_for_vault(vault):
+    per_vault = PROMPT_DIR / ("gemini-extraction-%s.md" % vault)
+    if per_vault.exists():
+        return per_vault.read_text()
+    return (PROMPT_DIR / "gemini-extraction.md").read_text()
 
 # Valid tags and the default when a message has no tag.
 VAULTS = ("school", "content", "business")
@@ -272,7 +281,7 @@ def parse_message(text):
 
 def process_link(url, vault):
     """Run the whole pipeline for one link. Returns the saved note's filename."""
-    prompt = PROMPT_FILE.read_text()
+    prompt = prompt_for_vault(vault)
     # Give Gemini the facts it can't know on its own, for the frontmatter:
     # the source URL, today's real date, and the creator handle from yt-dlp.
     prompt = prompt + (
