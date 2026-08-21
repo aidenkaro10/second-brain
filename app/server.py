@@ -11,6 +11,7 @@ Run it:  python3 app/server.py   then open http://localhost:5001
 
 import os
 import re
+import threading
 from datetime import date
 from pathlib import Path
 
@@ -94,6 +95,48 @@ def build_context(vault, query):
     return "\n\n---\n\n".join(parts), total_score
 
 
+# ---------- Living overviews ----------
+
+# One lock per vault so two updates never write the same file at once.
+_overview_locks = {v: threading.Lock() for v in VAULTS}
+
+
+def update_overview_from_chat(vault, question, answer):
+    """
+    Runs in the background after each chat answer. If the exchange reveals
+    something new about Aiden's projects or goals in this area, fold it
+    into the vault's overview.md. Silent no-op otherwise.
+    """
+    try:
+        import anthropic
+        path = ROOT / vault / "wiki" / "overview.md"
+        current = read_if_exists(path)
+        client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+        prompt = (
+            "Below is a living overview file about Aiden's %s life, followed by "
+            "one exchange from his chat app. If the exchange reveals something NEW "
+            "and lasting about Aiden's projects, goals, plans, or current state "
+            "(from HIS message, not the assistant's), merge it into the overview "
+            "and output the complete updated file. Keep it short, newest first, "
+            "same structure. Add 'chat, %s' to Sources if you change anything. "
+            "If nothing new or lasting was revealed, output exactly: UNCHANGED\n\n"
+            "==== CURRENT OVERVIEW ====\n%s\n\n"
+            "==== EXCHANGE ====\nAiden: %s\nAssistant: %s"
+            % (vault, date.today().isoformat(), current, question, answer)
+        )
+        response = client.messages.create(
+            model=ANTHROPIC_MODEL,
+            max_tokens=1500,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        text = "".join(b.text for b in response.content if b.type == "text").strip()
+        if text and text != "UNCHANGED" and text.startswith("#"):
+            with _overview_locks[vault]:
+                path.write_text(text + "\n")
+    except Exception as e:
+        print("Overview update skipped: %s" % e)
+
+
 # ---------- Routes ----------
 
 @app.route("/")
@@ -156,6 +199,15 @@ def chat():
         return jsonify({"error": "Anthropic API error: %s" % e}), 502
 
     answer = "".join(block.text for block in response.content if block.type == "text")
+
+    # Quietly update the vault's living overview in the background so the
+    # chat reply is never slowed down.
+    threading.Thread(
+        target=update_overview_from_chat,
+        args=(suggested_vault, question, answer),
+        daemon=True,
+    ).start()
+
     return jsonify({"answer": answer, "suggested_vault": suggested_vault})
 
 
