@@ -44,7 +44,7 @@ Sent to Gemini with each video. Output markdown with exactly: FRONTMATTER (yaml:
 
 INGEST SCRIPT (scripts/ingest.py, runs on /usr/local/bin/python3)
 1. Lock file so two runs never overlap (skip if lock exists and is under 2 hours old, clean it via atexit).
-2. Poll the Telegram bot getUpdates API (token + allowed chat id from .env). Each message = a link + optional #school/#content/#business tag, default content. Only accept the allowed chat id.
+2. Poll the Telegram bot getUpdates API (token + allowed chat id from .env). Each message = a link + optional #school/#content/#business/#advice tag, default content. #advice saves to the content vault but uses a lesson-extraction prompt (for videos ABOUT making content) and compiles into strategy/ topic files. Only accept the allowed chat id.
 3. YouTube links: pass URL straight to Gemini (it accepts YouTube URLs natively). TikTok/Instagram: download with yt-dlp to a temp dir, upload the file to Gemini, delete the local file ONLY after Gemini returns non-empty output. Also delete the Gemini server-side copy after.
 4. Instagram links need a logged-in session: pass yt-dlp the option cookiesfrombrowser = ("chrome", CHROME_PROFILE, None, None) where CHROME_PROFILE comes from .env (default "Default"). TikTok and YouTube need no login.
 5. Append to the Gemini prompt: the video URL, today's real date, and the creator name from yt-dlp metadata (Gemini can't know these).
