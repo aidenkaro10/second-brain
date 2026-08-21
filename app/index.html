@@ -215,9 +215,10 @@
   </form>
 
 <script>
-  // Chat history lives only in this array. Refresh the page and it's gone.
+  // Each vault has its OWN chat. Switching tabs switches conversations.
+  // History lives only in memory. Refresh the page and it's gone.
   // Only notes you explicitly save persist to disk.
-  const history = [];
+  const histories = { school: [], content: [], business: [], all: [] };
   let vault = "content";
 
   const messagesEl = document.getElementById("messages");
@@ -226,14 +227,33 @@
   const sendBtn = document.getElementById("send");
   const emptyEl = document.getElementById("empty");
 
-  // Vault pill switching
+  // Vault pill switching: swap to that vault's own conversation.
   document.getElementById("vaults").addEventListener("click", (e) => {
     const btn = e.target.closest(".vault-btn");
     if (!btn) return;
     document.querySelectorAll(".vault-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     vault = btn.dataset.vault;
+    renderVault();
   });
+
+  // Redraw the message area from the current vault's history.
+  function renderVault() {
+    messagesEl.innerHTML = "";
+    const msgs = histories[vault];
+    if (msgs.length === 0) {
+      messagesEl.appendChild(emptyEl);
+      return;
+    }
+    for (const m of msgs) {
+      if (m.role === "user") {
+        addBubble("user", m.content);
+      } else {
+        addBubble("assistant", m.content, true);
+        if (m.question) addSaveButton(m.question, m.content, m.suggested);
+      }
+    }
+  }
 
   // Tiny safe markdown renderer: escape all HTML first, then add back
   // formatting for bold, code, headers, and lists.
@@ -278,7 +298,8 @@
     return div;
   }
 
-  function addSaveButton(question, answer, suggestedVault) {
+  function addSaveButton(question, answer, suggestedVault, fromVault) {
+    fromVault = fromVault || vault;
     const row = document.createElement("div");
     row.className = "save-row";
     const btn = document.createElement("button");
@@ -289,7 +310,7 @@
       btn.textContent = "Saving...";
       // When the pill is All, save to the vault the answer mostly
       // concerns (the server suggests it). Otherwise the selected vault.
-      const target = vault === "all" ? suggestedVault : vault;
+      const target = fromVault === "all" ? suggestedVault : fromVault;
       try {
         const res = await fetch("/api/save", {
           method: "POST",
@@ -315,8 +336,9 @@
 
     input.value = "";
     sendBtn.disabled = true;
+    const askedVault = vault;  // remember which tab this question belongs to
     addBubble("user", question);
-    history.push({ role: "user", content: question });
+    histories[askedVault].push({ role: "user", content: question });
 
     const thinking = addBubble("assistant", "");
     thinking.classList.add("thinking");
@@ -326,16 +348,26 @@
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ vault, messages: history })
+        body: JSON.stringify({
+          vault: askedVault,
+          // The API only wants role + content, not our extra fields.
+          messages: histories[askedVault].map(m => ({ role: m.role, content: m.content }))
+        })
       });
       const data = await res.json();
       thinking.remove();
       if (data.error) {
         addBubble("assistant", "Error: " + data.error);
       } else {
-        addBubble("assistant", data.answer, true);
-        history.push({ role: "assistant", content: data.answer });
-        addSaveButton(question, data.answer, data.suggested_vault);
+        histories[askedVault].push({
+          role: "assistant", content: data.answer,
+          question: question, suggested: data.suggested_vault
+        });
+        // Only draw the answer if the user is still on the tab they asked from.
+        if (vault === askedVault) {
+          addBubble("assistant", data.answer, true);
+          addSaveButton(question, data.answer, data.suggested_vault, askedVault);
+        }
       }
     } catch (err) {
       thinking.remove();
