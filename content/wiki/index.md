@@ -7,3 +7,4 @@
 - [[formats]] — video formats; currently: talking head with rapid resource overlays (listicle), talking head with lifestyle-contrast b-roll, talking head with diagram-dense explainer, talking head daily challenge log (Day X/Y), and talking head with actionable checklist overlays (✅/❌).
 - [[platform-tactics]] — platform-specific retention and engagement tactics; currently TikTok: 2x-speed overlay, urgency close, kinetic text animations, day-count progress overlay.
 - [[ctas]] — call-to-action patterns; currently: "follow to keep up to date" + next-episode teaser.
+- [[marketing-book-notes]] — Aiden's own book notes (Building a StoryBrand and more), imported verbatim from Google Docs.

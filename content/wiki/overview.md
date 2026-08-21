@@ -16,9 +16,10 @@ This file is about MY content plans, not the videos I study (those live in the p
 
 ## Content plan
 
-- Series decided: 30-day learn-in-public series (dropped the "100 days" framing). Hook: "no CS degree, no company, NYC didn't work out — building the skills anyway."
+- Series decided: 30-day learn-in-public series (dropped the "100 days" framing). Hook: "no CS degree, no company, NYC didn't work out — building the skills anyway." Framed as "Can I build the skills needed to be an AI startup founder in 30 days?"
 - Format habit being adopted from alexxubuilds: each post explains one concept clearly enough for a stranger to learn something — not diary/day-count content. Guardrails: only explain things actually built and gotten working (never things just read about), and say plainly when unsure to invite correction instead of criticism. This guardrail is the core credibility mechanism since he has no other authority proof besides the JS jacket — the working code on screen is the proof.
-- Rollout plan: day counter starts from day 1 (reversed the earlier plan to delay announcing/counting until day 14). The accumulating day-count becomes the main credibility signal from the start, proving work happened before he's said a word.
+- Rollout plan: series starts at Day 0 (kickoff/setup video), with Day 1 as the next episode — day counter is the main credibility signal from the start, proving work happened before he's said a word.
+- Plans during the 30 days include attending hackathons in addition to self-directed learning/building.
 - Lane locked in: building real apps with AI tooling and explaining what it actually generated (leans on Python + vibe-coding background, undersupplied niche vs. generic "learning to code").
 - Earlier launch arc: Week 1 of philosophy/worldview videos about me → NYC/Jane Street AMP content for authority (single JS jacket reveal moment, not daily wear) → then the build series.
 - Content pillars: build, mindset, business insight — alternating, never two of the same in a row.
