@@ -1,14 +1,16 @@
-# Business Overview
+# My Business Profile
 
-A living profile of Aiden's business life. The compiler updates this automatically as new sources arrive.
+This file is about MY business, not lessons from videos (those live in the function files like [[mindset]]). Updates automatically from chats. Facts here don't need video sources.
 
-## Current state
+## Company
 
-- Aiden is a student and founder building **Rekko**: AI search visibility for local businesses, getting them seen at the top of Google and AI recommendations.
-- He creates social media content to market Rekko himself (see the content vault).
-- Current focus in saved material: founder mindset. Latest lesson: success without killing your spark ([[mindset]]).
+- **Rekko**: AI search visibility for local businesses. Gets them seen at the top of Google and AI recommendations.
+- Founder: Aiden Karo, student and solo founder. He makes Rekko's social content himself.
 
-## Sources
+## Services
 
-- conversation with Aiden, 2026-08-20
-- 2026-08-20-jin-oo-kim.md
+- Not detailed yet. Tell the chat what Rekko offers and it saves here.
+
+## Goals and plans
+
+- Nothing saved yet.

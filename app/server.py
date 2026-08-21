@@ -113,16 +113,18 @@ def update_overview_from_chat(vault, question, answer):
         current = read_if_exists(path)
         client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
         prompt = (
-            "Below is a living overview file about Aiden's %s life, followed by "
-            "one exchange from his chat app. If the exchange reveals something NEW "
-            "and lasting about Aiden's projects, goals, plans, or current state "
-            "(from HIS message, not the assistant's), merge it into the overview "
-            "and output the complete updated file. Keep it short, newest first, "
-            "same structure. Add 'chat, %s' to Sources if you change anything. "
+            "Below is Aiden's personal %s profile file, followed by one exchange "
+            "from his chat app. If HIS message (not the assistant's) reveals "
+            "something new and lasting about his own plans, niche, services, "
+            "schedule, goals, or state, merge it into the matching section and "
+            "output the complete updated file. Replace 'not saved yet' "
+            "placeholders when real info arrives. If he shares a full plan "
+            "(like a 30 day content plan), save the whole thing. Keep the file "
+            "clean and current; outdated facts get replaced, not stacked. "
             "If nothing new or lasting was revealed, output exactly: UNCHANGED\n\n"
-            "==== CURRENT OVERVIEW ====\n%s\n\n"
+            "==== CURRENT PROFILE ====\n%s\n\n"
             "==== EXCHANGE ====\nAiden: %s\nAssistant: %s"
-            % (vault, date.today().isoformat(), current, question, answer)
+            % (vault, current, question, answer)
         )
         response = client.messages.create(
             model=ANTHROPIC_MODEL,

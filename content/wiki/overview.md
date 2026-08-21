@@ -1,17 +1,15 @@
-# Content Overview
+# My Content Profile
 
-A living profile of Aiden's content creation. The compiler updates this automatically as new sources arrive.
+This file is about MY content plans, not the videos I study (those live in the pattern files). Updates automatically from chats. Facts here don't need video sources.
 
-## Current state
+## Niche
 
-- Aiden makes short-form social content (TikTok focus) to market **Rekko**, his AI search visibility startup.
-- He studies viral videos by saving them through his Telegram bot; breakdowns get filed by pattern.
-- Patterns collected so far: contrarian and motivational hooks, two talking-head formats, TikTok retention tactics ([[hooks/contrarian]], [[hooks/motivational]], [[formats]], [[platform-tactics]]).
-- Gap: no curiosity-gap, POV, negativity, or question hook examples saved yet.
+- Short-form content (TikTok focus) marketing Rekko, my AI search visibility startup for local businesses.
 
-## Sources
+## Content plan
 
-- conversation with Aiden, 2026-08-20
-- 2026-08-20-swerikcodes.md
-- 2026-08-20-alexeubank2-0.md
-- 2026-08-20-jin-oo-kim.md
+- No plan saved yet. Tell the chat your 30-day plan, posting schedule, or pillars and it saves here.
+
+## Ideas and drafts
+
+- Nothing saved yet.

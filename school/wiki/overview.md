@@ -1,12 +1,15 @@
-# School Overview
+# My School Profile
 
-A living profile of Aiden's school life. The compiler updates this automatically as new sources arrive.
+This file is about MY classes and schedule, not study material (that lives in course topic files). Updates automatically from chats. Facts here don't need video sources.
 
-## Current state
+## Classes
 
-- Aiden is a student (CS3Z coursework visible in his GitHub org from 2026).
-- No courses or study material ingested yet. Send lecture videos, textbook photos, or study links tagged #school to start filling this vault.
+- Not saved yet. Tell the chat your class list and it saves here.
 
-## Sources
+## Schedule
 
-- conversation with Aiden, 2026-08-20
+- Not saved yet.
+
+## Exams and deadlines
+
+- Nothing saved yet.
