@@ -39,5 +39,5 @@ Pricing: unknown — market rates researched but actual pricing not recorded.
 - Near-term roadmap locked in: finish the build, onboard 3 paying clients (discounted fine, free not), run them manual-ish for weeks 2–6 while logging every failure and every step touched by hand (that log is the product spec), add 3–5 more at week 6 and raise the price outside the referral circle, pull 60-day numbers from the first three and turn them into case studies.
 - New Year's launch: campaign for businesses to level up in 2027 — selling the done-for-you agency at full price into January demand, not the platform.
 - Productize the steps no longer touched by hand in Q1–Q2 2027, with engineering help.
-- Rule: no new direction until 10 clients have hit 60 days. Target: REKKO to 10 customers.
+- Target: REKKO to 10 customers.
 - One rekko folder with its own CLAUDE.md as part of the Claude Code setup.
