@@ -20,13 +20,23 @@ Seen in the @alexeubank2-0 "slow motion is better than no motion" TikTok: bold, 
 
 **Why it works:** keeps reader focus locked to the current phrase being spoken, so viewers who watch muted still get the full message, and the changing text gives the eye something new every couple seconds.
 
+### Day-count progress overlay ("Day 16/30")
+
+Seen in the @alexxubuilds daily-challenge videos: an on-screen counter like "Trying to become CRACKED at machine learning / Day 16/30" displayed early in the video, separate from the spoken content.
+
+**Why it works:** signals real accumulated proof (this is video 16 of a promised 30) before the viewer has heard a word, which builds credibility for that day's specific claim and invites binge-watching the rest of the series.
+
 ## Related
 
-- [[hooks/contrarian]] and [[hooks/motivational]] for the openings of these videos.
+- [[hooks/contrarian]] and [[hooks/motivational]] for the openings of the swerikcodes/alexeubank2-0 videos.
+- [[hooks/curiosity-gap]] and [[hooks/question]] for the openings of the alexxubuilds videos.
 - [[formats]] for their overall structure.
+- [[ctas]] for the follow prompts paired with the day-count overlay.
 
 ## Sources
 
 - 2026-08-20-swerikcodes.md
 - 2026-08-20-alexeubank2-0.md
 - 2026-08-20-alexeubank2-0-2.md
+- 2026-08-20-alexxubuilds-3.md
+- 2026-08-20-alexxubuilds-4.md

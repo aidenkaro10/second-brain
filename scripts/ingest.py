@@ -105,6 +105,18 @@ def slugify(text):
     return text[:40] or "video"
 
 
+def ydl_opts_for(url):
+    """
+    Base yt-dlp options. Instagram requires a logged-in session, so for
+    Instagram links we borrow the login cookies from Chrome on this Mac.
+    """
+    opts = {"quiet": True, "no_warnings": True}
+    if "instagram.com" in url:
+        # Chrome keeps Aiden's login under "Profile 1", not "Default".
+        opts["cookiesfrombrowser"] = ("chrome", "Profile 1", None, None)
+    return opts
+
+
 def get_creator_slug(url):
     """
     Ask yt-dlp for the video's metadata (no download) to get the creator name.
@@ -112,7 +124,7 @@ def get_creator_slug(url):
     """
     try:
         from yt_dlp import YoutubeDL
-        with YoutubeDL({"quiet": True, "no_warnings": True}) as ydl:
+        with YoutubeDL(ydl_opts_for(url)) as ydl:
             info = ydl.extract_info(url, download=False)
         creator = info.get("uploader") or info.get("channel") or info.get("uploader_id")
         if creator:
@@ -169,11 +181,8 @@ def extract_downloaded(url, prompt):
     client = gemini_client()
     try:
         # 1. Download the video.
-        opts = {
-            "outtmpl": str(tmpdir / "%(id)s.%(ext)s"),
-            "quiet": True,
-            "no_warnings": True,
-        }
+        opts = ydl_opts_for(url)
+        opts["outtmpl"] = str(tmpdir / "%(id)s.%(ext)s")
         with YoutubeDL(opts) as ydl:
             info = ydl.extract_info(url, download=True)
             video_path = Path(ydl.prepare_filename(info))

@@ -28,14 +28,48 @@ Short direct-to-camera bursts intercut with quick lifestyle b-roll (couple at su
 - Blends aspirational lifestyle imagery with relatable gym effort to keep viewers visually engaged while the voiceover carries one continuous argument.
 - Pace varies shot-to-shot (fast lifestyle cuts, then a held gym shot) so the edit itself mirrors the "motion vs. no motion" message.
 
+## Talking head + capybara mic + diagram-dense explainer
+
+Direct-to-camera talking head holding a plush capybara as a "microphone," with near-constant diagram/graphic overlays illustrating one technical concept end to end. Seen in the @alexxubuilds RAG explainer (episode 3 of "the context bottleneck" series).
+
+**Structure of the example (1:16 total):**
+1. 0:00-0:03 hook to camera, capybara plush prop ([[hooks/curiosity-gap]])
+2. 0:03-0:13 series title banner + topic icons (database, book, web)
+3. 0:14-1:11 concept build-up: flowchart, then vector/embedding graphics, a worked example (Paris/France vs Berlin/Germany), an indexing diagram, a query-matching graphic, and the similarity formula, each swapped in as the script reaches that beat
+4. 1:12-1:16 return to talking head to wrap up
+
+**Why it works:**
+- High visual density: near-constant diagram overlays turn an abstract ML concept (RAG, vector embeddings) into something visually trackable step by step.
+- Series framing ("episode 3") rewards returning viewers and sets up future episodes.
+- The casual prop keeps a dense technical topic approachable instead of feeling like a lecture.
+
+## Talking head + capybara mic + daily challenge log (Day X/Y)
+
+A multi-video series: one kickoff video states a timed challenge, then daily follow-up videos log that day's progress. Seen across three @alexxubuilds videos — the 60-day "disgustingly educated" kickoff, and Day 1 / Day 16 of a separate 30-day "cracked at machine learning" challenge.
+
+**Structure across the example videos:**
+1. **Kickoff video:** states the challenge as a question ([[hooks/question]]), gives authority proof (e.g. incoming Stanford student), states the plan (X days doing A, Y days doing B), closes with a CTA to follow for daily updates ([[ctas]]).
+2. **Daily video:** quick "Day N" marker, b-roll of the day's work (desk timelapse, over-the-shoulder coding), graphics for whatever tool or concept was covered that day, closes with a recap and a "Day N+1" teaser ([[ctas]]).
+
+**Why it works:**
+- Serialized structure creates an open loop — viewers follow to see whether the challenge succeeds.
+- Daily videos are low-effort to produce (same prop, same recap-graphics-CTA shape) but each one teaches one real concept, so it reads as educational instead of pure diary content.
+- The on-screen progress counter ("Day 16/30") signals real accumulated proof — see [[platform-tactics]].
+
 ## Related
 
 - [[hooks/contrarian]] for how the swerikcodes example opens.
 - [[hooks/motivational]] for how the alexeubank2-0 example opens.
-- [[platform-tactics]] for the retention devices layered on top of both.
+- [[hooks/curiosity-gap]] and [[hooks/question]] for how the alexxubuilds examples open.
+- [[platform-tactics]] for the retention devices layered on top of all of these.
+- [[ctas]] for how the alexxubuilds examples close.
 
 ## Sources
 
 - 2026-08-20-swerikcodes.md
 - 2026-08-20-alexeubank2-0.md
 - 2026-08-20-alexeubank2-0-2.md
+- 2026-08-20-alexxubuilds.md
+- 2026-08-20-alexxubuilds-2.md
+- 2026-08-20-alexxubuilds-3.md
+- 2026-08-20-alexxubuilds-4.md
