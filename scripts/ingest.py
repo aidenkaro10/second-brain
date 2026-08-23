@@ -231,6 +231,61 @@ def extract_downloaded(url, prompt):
         shutil.rmtree(tmpdir, ignore_errors=True)
 
 
+
+# ---------- Photos ----------
+
+def download_telegram_file(file_id):
+    """Download a file the user sent to the bot. Returns (bytes, filename)."""
+    info = telegram("getFile", file_id=file_id)
+    file_path = info["file_path"]
+    url = "https://api.telegram.org/file/bot%s/%s" % (TELEGRAM_BOT_TOKEN, file_path)
+    resp = requests.get(url, timeout=60)
+    resp.raise_for_status()
+    return resp.content, file_path.split("/")[-1]
+
+
+def process_photo(file_id, vault, kind, caption=""):
+    """
+    A photo/screenshot sent to the bot: download it, have Gemini read it
+    (text verbatim + what it shows + takeaways), save to the vault's raw/.
+    """
+    from google.genai import types
+    data, filename = download_telegram_file(file_id)
+    ext = filename.rsplit(".", 1)[-1].lower()
+    mime = {"jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png",
+            "webp": "image/webp", "gif": "image/gif"}.get(ext, "image/jpeg")
+
+    purpose = {
+        "school": "study material for a college class (concepts, formulas, definitions)",
+        "business": "lessons for running a startup (tactics, numbers, strategy)",
+        "advice": "advice about making social media content",
+        "content": "social media content patterns (hooks, formats, what went viral)",
+    }.get(kind, "general knowledge")
+
+    prompt = (PROMPT_DIR / "gemini-photo.md").read_text()
+    prompt += "\n\nToday's date is: %s\nThe purpose of saving this image: %s\n" % (
+        date.today().isoformat(), purpose)
+    if caption:
+        prompt += "The sender's caption: %s\n" % caption
+
+    client = gemini_client()
+    response = client.models.generate_content(
+        model=GEMINI_MODEL,
+        contents=[types.Part.from_bytes(data=data, mime_type=mime), prompt],
+    )
+    text = response.text
+    if not text or not text.strip():
+        raise RuntimeError("Gemini returned an empty response for the photo")
+
+    # Name the note after the caption if there is one, else "photo".
+    slug = slugify(re.sub(r"#\w+", "", caption)) if caption else "photo"
+    if not slug or slug == "video":
+        slug = "photo"
+    path = unique_path(ROOT / vault / "raw", "%s-%s.md" % (date.today().isoformat(), slug))
+    path.write_text(text)
+    return path
+
+
 # ---------- Compilation ----------
 
 def trigger_compile():
@@ -273,9 +328,7 @@ def parse_message(text):
     #advice saves to the content vault but extracts lessons, not hooks.
     """
     url_match = re.search(r"https?://\S+", text)
-    if not url_match:
-        return None, None, None
-    url = url_match.group(0)
+    url = url_match.group(0) if url_match else None
     vault, kind = DEFAULT_VAULT, DEFAULT_VAULT
     tag_match = re.search(r"#(school|content|business|advice)", text.lower())
     if tag_match:
@@ -366,8 +419,30 @@ def main():
 
         text = message.get("text") or message.get("caption") or ""
         url, vault, kind = parse_message(text)
+
+        # Photos: Telegram sends several sizes, the last one is the biggest.
+        # Also accept images sent as files (uncompressed).
+        photo_id = None
+        if message.get("photo"):
+            photo_id = message["photo"][-1]["file_id"]
+        elif (message.get("document") or {}).get("mime_type", "").startswith("image/"):
+            photo_id = message["document"]["file_id"]
+
+        if photo_id and not url:
+            try:
+                print("Processing photo -> %s vault" % vault)
+                path = process_photo(photo_id, vault, kind, caption=text)
+                reply("Saved photo: %s (%s vault)" % (path.name, vault))
+                saved_any = True
+            except Exception as e:
+                print("Failed on photo: %s" % e)
+                reply("Failed on photo\nError: %s" % e)
+            state["processed_message_ids"].append(msg_id)
+            save_state(state)
+            continue
+
         if not url:
-            reply("No link found in that message. Send a YouTube, TikTok, or Instagram link, "
+            reply("No link or photo found in that message. Send a YouTube, TikTok, or Instagram link or a photo, "
                   "optionally with #school, #content, #business, or #advice.")
             state["processed_message_ids"].append(msg_id)
             continue
