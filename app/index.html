@@ -133,6 +133,26 @@
     font-family: ui-monospace, "SF Mono", Menlo, monospace;
   }
   .assistant strong { font-weight: 700; }
+  .attach-btn {
+    width: 44px; height: 44px; flex: none;
+    background: var(--card); color: var(--muted);
+    border: 1px solid var(--border); border-radius: 50%;
+    font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .attach-btn:hover { color: var(--accent); border-color: var(--accent); }
+  #chips {
+    display: none; flex-wrap: wrap; gap: 6px; align-items: center;
+    padding: 8px 16px 0; background: var(--bg);
+  }
+  #chips.has-files { display: flex; }
+  .chip {
+    font-size: 12px; background: var(--accent-soft); color: var(--accent);
+    border-radius: 999px; padding: 4px 10px; display: flex; gap: 6px; align-items: center;
+  }
+  .chip button { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 14px; padding: 0; }
+  .vault-toggle { font-size: 12px; color: var(--muted); display: flex; gap: 5px; align-items: center; margin-left: auto; }
+  .user .files { font-size: 12px; opacity: 0.85; margin-top: 4px; }
   .thinking { color: var(--muted); }
   .thinking .dots::after {
     content: "";
@@ -209,8 +229,14 @@
     </div>
   </div>
 
+  <div id="chips">
+    <label class="vault-toggle"><input type="checkbox" id="add-to-vault"> also save to vault</label>
+  </div>
+
   <form id="chat-form">
-    <input type="text" id="input" placeholder="Ask your second brain..." autocomplete="off">
+    <button type="button" class="attach-btn" id="attach" aria-label="Attach file">📎</button>
+    <input type="file" id="file-input" multiple accept="image/*,application/pdf,.txt,.md,.csv" style="display:none">
+    <input type="text" id="input" placeholder="Ask your second brain or attach a file..." autocomplete="off">
     <button type="submit" id="send" aria-label="Send">↑</button>
   </form>
 
@@ -329,16 +355,66 @@
     messagesEl.scrollTop = messagesEl.scrollHeight;
   }
 
+  // ----- Attachments (images, PDFs, text files) -----
+  let pending = [];  // files waiting to go with the next message
+  const chipsEl = document.getElementById("chips");
+  const fileInput = document.getElementById("file-input");
+  const addToVaultEl = document.getElementById("add-to-vault");
+  document.getElementById("attach").onclick = () => fileInput.click();
+
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result.split(",")[1]);
+      r.onerror = reject;
+      r.readAsDataURL(file);
+    });
+  }
+
+  fileInput.addEventListener("change", async () => {
+    for (const f of fileInput.files) {
+      if (f.size > 25 * 1024 * 1024) { alert(f.name + " is over 25MB, too big."); continue; }
+      pending.push({ name: f.name, mime: f.type || "text/plain", data: await fileToBase64(f) });
+    }
+    fileInput.value = "";
+    renderChips();
+  });
+
+  function renderChips() {
+    chipsEl.querySelectorAll(".chip").forEach(c => c.remove());
+    pending.forEach((a, i) => {
+      const chip = document.createElement("span");
+      chip.className = "chip";
+      chip.textContent = a.name + " ";
+      const x = document.createElement("button");
+      x.textContent = "×";
+      x.onclick = () => { pending.splice(i, 1); renderChips(); };
+      chip.appendChild(x);
+      chipsEl.insertBefore(chip, chipsEl.firstChild);
+    });
+    chipsEl.classList.toggle("has-files", pending.length > 0);
+  }
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const question = input.value.trim();
-    if (!question) return;
+    if (!question && pending.length === 0) return;
 
     input.value = "";
     sendBtn.disabled = true;
     const askedVault = vault;  // remember which tab this question belongs to
-    addBubble("user", question);
-    histories[askedVault].push({ role: "user", content: question });
+    const attachments = pending;
+    const addToVault = addToVaultEl.checked;
+    pending = []; renderChips();
+
+    const fileNote = attachments.length ? "📎 " + attachments.map(a => a.name).join(", ") : "";
+    const bubble = addBubble("user", question || "(attached files)");
+    if (fileNote) {
+      const f = document.createElement("div"); f.className = "files"; f.textContent = fileNote;
+      bubble.appendChild(f);
+    }
+    // History keeps a text note about the files so later turns know they existed.
+    histories[askedVault].push({ role: "user", content: (question || "(see attached)") + (fileNote ? "\n[" + fileNote + "]" : "") });
 
     const thinking = addBubble("assistant", "");
     thinking.classList.add("thinking");
@@ -351,7 +427,9 @@
         body: JSON.stringify({
           vault: askedVault,
           // The API only wants role + content, not our extra fields.
-          messages: histories[askedVault].map(m => ({ role: m.role, content: m.content }))
+          messages: histories[askedVault].map(m => ({ role: m.role, content: m.content })),
+          attachments: attachments,
+          add_to_vault: addToVault
         })
       });
       const data = await res.json();
@@ -367,6 +445,9 @@
         if (vault === askedVault) {
           addBubble("assistant", data.answer, true);
           addSaveButton(question, data.answer, data.suggested_vault, askedVault);
+          if (data.saved_files && data.saved_files.length) {
+            addBubble("assistant", "Added to vault: " + data.saved_files.join(", "));
+          }
         }
       }
     } catch (err) {

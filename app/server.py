@@ -9,6 +9,7 @@ Answers can be saved as markdown notes in the vault's chats/ folder.
 Run it:  python3 app/server.py   then open http://localhost:5001
 """
 
+import base64
 import os
 import re
 import threading
@@ -139,6 +140,54 @@ def update_overview_from_chat(vault, question, answer):
         print("Overview update skipped: %s" % e)
 
 
+
+# ---------- Attachments ----------
+
+IMAGE_TYPES = ("image/jpeg", "image/png", "image/gif", "image/webp")
+
+
+def attachment_blocks(attachments):
+    """
+    Turn uploaded files into Anthropic message content blocks.
+    Images and PDFs go in natively; text-like files are pasted as text.
+    """
+    blocks = []
+    for a in attachments or []:
+        mime = a.get("mime", "")
+        data = a.get("data", "")
+        name = a.get("name", "file")
+        if mime in IMAGE_TYPES:
+            blocks.append({"type": "image",
+                           "source": {"type": "base64", "media_type": mime, "data": data}})
+        elif mime == "application/pdf":
+            blocks.append({"type": "document",
+                           "source": {"type": "base64", "media_type": "application/pdf", "data": data},
+                           "title": name})
+        else:
+            # Anything else: treat as text (md, txt, csv, code).
+            try:
+                text = base64.b64decode(data).decode("utf-8", errors="replace")
+            except Exception:
+                text = "(could not read %s)" % name
+            blocks.append({"type": "text", "text": "Attached file %s:\n\n%s" % (name, text[:60000])})
+    return blocks
+
+
+def save_attachment_to_vault(vault, a):
+    """Drop an uploaded file into the vault's raw/ so the compiler picks it up."""
+    name = re.sub(r"[^A-Za-z0-9._-]+", "-", a.get("name", "file")).strip("-") or "file"
+    folder = ROOT / vault / "raw"
+    folder.mkdir(parents=True, exist_ok=True)
+    path = folder / ("%s-%s" % (date.today().isoformat(), name))
+    counter = 2
+    while path.exists():
+        stem, dot, ext = name.rpartition(".")
+        path = folder / ("%s-%s-%d%s%s" % (date.today().isoformat(), stem or ext, counter, dot, ext if stem else ""))
+        counter += 1
+    path.write_bytes(base64.b64decode(a.get("data", "")))
+    return path
+
+
 # ---------- Routes ----------
 
 @app.route("/")
@@ -155,6 +204,8 @@ def chat():
         return jsonify({"error": "No messages"}), 400
 
     question = messages[-1].get("content", "")
+    attachments = data.get("attachments") or []
+    add_to_vault = bool(data.get("add_to_vault"))
 
     # Build context from the selected vault, or all three for "all".
     if vault == "all":
@@ -188,6 +239,22 @@ def chat():
         "==== WIKI CONTEXT ====\n\n" + context
     )
 
+    # Earlier turns are plain text. The newest turn carries any attachments
+    # as native image/PDF blocks so Claude can actually see them.
+    api_messages = [{"role": m["role"], "content": m["content"]} for m in messages[:-1]]
+    last_blocks = attachment_blocks(attachments)
+    last_blocks.append({"type": "text", "text": question or "(see attached)"})
+    api_messages.append({"role": "user", "content": last_blocks})
+
+    saved_files = []
+    if add_to_vault and attachments:
+        target = suggested_vault if vault == "all" else vault
+        for a in attachments:
+            try:
+                saved_files.append(str(save_attachment_to_vault(target, a).relative_to(ROOT)))
+            except Exception as e:
+                print("Could not save attachment: %s" % e)
+
     import anthropic
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
     try:
@@ -195,7 +262,7 @@ def chat():
             model=ANTHROPIC_MODEL,
             max_tokens=2000,
             system=system_prompt,
-            messages=[{"role": m["role"], "content": m["content"]} for m in messages],
+            messages=api_messages,
         )
     except anthropic.APIError as e:
         return jsonify({"error": "Anthropic API error: %s" % e}), 502
@@ -210,7 +277,8 @@ def chat():
         daemon=True,
     ).start()
 
-    return jsonify({"answer": answer, "suggested_vault": suggested_vault})
+    return jsonify({"answer": answer, "suggested_vault": suggested_vault,
+                    "saved_files": saved_files})
 
 
 @app.route("/api/save", methods=["POST"])

@@ -286,6 +286,36 @@ def process_photo(file_id, vault, kind, caption=""):
     return path
 
 
+
+def process_document(file_id, filename, vault, kind, caption=""):
+    """
+    A PDF or text file sent to the bot: Gemini reads it with the vault's
+    extraction prompt (same sections as a video, minus the scene stuff).
+    """
+    from google.genai import types
+    data, _ = download_telegram_file(file_id)
+    ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
+    prompt = prompt_for_vault(kind) + (
+        "\n\nNOTE: this is a document, not a video. Treat sections about "
+        "spoken words, scenes, or timestamps as 'not applicable' and fill the "
+        "rest from the document's content.\nToday's date is: %s\n" % date.today().isoformat())
+    if caption:
+        prompt += "The sender's caption: %s\n" % caption
+    client = gemini_client()
+    if ext == "pdf":
+        part = types.Part.from_bytes(data=data, mime_type="application/pdf")
+    else:
+        part = data.decode("utf-8", errors="replace")[:200000]
+    response = client.models.generate_content(model=GEMINI_MODEL, contents=[part, prompt])
+    text = response.text
+    if not text or not text.strip():
+        raise RuntimeError("Gemini returned an empty response for the document")
+    slug = slugify(filename.rsplit(".", 1)[0]) if filename else "document"
+    path = unique_path(ROOT / vault / "raw", "%s-%s.md" % (date.today().isoformat(), slug))
+    path.write_text(text)
+    return path
+
+
 # ---------- Compilation ----------
 
 def trigger_compile():
@@ -428,6 +458,22 @@ def main():
         elif (message.get("document") or {}).get("mime_type", "").startswith("image/"):
             photo_id = message["document"]["file_id"]
 
+        # Documents: PDFs and text files get read by Gemini too.
+        doc = message.get("document") or {}
+        doc_mime = doc.get("mime_type", "")
+        if doc and not photo_id and not url and (doc_mime == "application/pdf" or doc_mime.startswith("text/")):
+            try:
+                print("Processing document %s -> %s vault" % (doc.get("file_name"), vault))
+                path = process_document(doc["file_id"], doc.get("file_name", "document"), vault, kind, caption=text)
+                reply("Saved document: %s (%s vault)" % (path.name, vault))
+                saved_any = True
+            except Exception as e:
+                print("Failed on document: %s" % e)
+                reply("Failed on document\nError: %s" % e)
+            state["processed_message_ids"].append(msg_id)
+            save_state(state)
+            continue
+
         if photo_id and not url:
             try:
                 print("Processing photo -> %s vault" % vault)
@@ -442,7 +488,7 @@ def main():
             continue
 
         if not url:
-            reply("No link or photo found in that message. Send a YouTube, TikTok, or Instagram link or a photo, "
+            reply("No link, photo, or file found in that message. Send a link, a photo, or a PDF, "
                   "optionally with #school, #content, #business, or #advice.")
             state["processed_message_ids"].append(msg_id)
             continue
