@@ -7,6 +7,8 @@
 - [[formats]] — video formats; currently: talking head with rapid resource overlays (listicle), talking head with lifestyle-contrast b-roll, talking head with diagram-dense explainer, talking head daily challenge log (Day X/Y), talking head with actionable checklist overlays (✅/❌), long-form tutorial with modular chapters + dual-host.
 - [[platform-tactics]] — platform-specific retention and engagement tactics; currently TikTok: 2x-speed overlay, urgency close, kinetic text animations, day-count progress overlay; YouTube: modular chapter/title-card structure, relatable analogies.
 - [[ctas]] — call-to-action patterns; currently: "follow to keep up to date" + next-episode teaser.
+- [[my-video-stats]] — auto-refreshed table of likes/comments/views on my posts, best first.
 - [[my-videos]] — log of videos I posted myself: hook, structure, techniques, critique, performance.
 - [[marketing-book-notes]] — Aiden's own book notes (Building a StoryBrand and more), imported verbatim from Google Docs.
 - [[strategy/audience-psychology]] — advice: mapping audience psychology (likes/dislikes/interests/values) and the stop-retain-act engagement framework.
+- [[strategy/algorithm]] — advice: the 200-viewer sample test, the 3 metrics that decide reach, and "200 view jail."

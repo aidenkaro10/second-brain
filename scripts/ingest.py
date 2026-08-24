@@ -141,7 +141,9 @@ def video_meta(url):
     if url in _meta_cache:
         return _meta_cache[url]
 
-    meta = {"creator": None, "posted": None}
+    meta = {"creator": None, "posted": None, "view_count": None,
+            "like_count": None, "comment_count": None,
+            "repost_count": None, "duration": None}
     try:
         from yt_dlp import YoutubeDL
         with YoutubeDL(ydl_opts_for(url)) as ydl:
@@ -154,6 +156,12 @@ def video_meta(url):
         if raw_date and len(str(raw_date)) == 8:
             d = str(raw_date)
             meta["posted"] = "%s-%s-%s" % (d[:4], d[4:6], d[6:])
+        # Engagement numbers, when the platform exposes them.
+        # Instagram gives likes and comments only; TikTok usually gives views
+        # and shares too. Missing ones stay None instead of guessing.
+        for key in ("view_count", "like_count", "comment_count", "repost_count"):
+            meta[key] = info.get(key)
+        meta["duration"] = info.get("duration")
     except Exception:
         pass
 
@@ -482,6 +490,14 @@ def process_link(url, vault, kind=None):
     )
     if meta["posted"]:
         prompt += "The video was posted on: %s\n" % meta["posted"]
+    if kind == "mine":
+        stats = {k: meta.get(k) for k in
+                 ("view_count", "like_count", "comment_count", "repost_count")}
+        known = {k: v for k, v in stats.items() if v is not None}
+        if known:
+            prompt += ("Engagement numbers as of today (%s), put these in the "
+                       "frontmatter as they are: %s\n"
+                       % (date.today().isoformat(), json.dumps(known)))
 
     platform = detect_platform(url)
     if platform == "unknown":

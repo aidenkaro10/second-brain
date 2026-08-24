@@ -41,7 +41,33 @@ Two main ways AI models get post-trained:
 - Use RL-style thinking when a feature needs to generalize across messy, varied situations (e.g. handling many different client industries/questions).
 - Useful for explaining basic AI mechanics to clients or stakeholders in simple terms.
 
+## Avoid "AI slop" UI in vibe-coded apps
+
+AI-assisted ("vibe coded") apps often end up looking visually generic and unrefined. Use curated design resource sites to fix color, layout, and interactivity instead of shipping the default AI look.
+
+> "how to make your app not feel like AI SLOP"
+
+> "Does your vibe coded app look like this, when really you want it to look like this?"
+
+**Tools:**
+- **Coolors (coolors.co)** — generate or browse curated color palettes to replace generic UI themes.
+- **Motion Sites (motionsites.ai)** — browse hero/landing page designs and copy the UI prompt straight into an AI coding agent.
+
+  > "Second website is motionsites.ai which has a bunch of unique heroes and landing pages which you can use to get inspiration and even copy the prompt right into your AI agent."
+
+- **21st.dev** — thousands of plug-and-play React components to make an app feel more alive.
+
+  > "Third is 21st.dev which has thousands of React components that you can use to make your app feel more alive and plug right into anything you build."
+
+- **Layer** — micro-interactions, animations, and UI component inspiration for a more personal feel.
+
+**How to apply:**
+- Swap default/generic color themes for a palette pulled from Coolors.
+- Copy a Motion Sites layout prompt into the coding agent instead of letting it default to a generic hero section.
+- Pull in 21st.dev components and Layer micro-animations for Rekko's UI instead of leaving default AI-generated interactions.
+
 ## Sources
 
 - 2026-08-21-kayvon-jafarzadeh.md
 - 2026-08-21-vardhan-agnihotri.md
+- 2026-08-24-ranveer-singh.md
