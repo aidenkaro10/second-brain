@@ -36,3 +36,5 @@ Your analysis of the hook mechanism and retention devices. 5 bullets maximum.
 - The transcript must be VERBATIM. Do not summarize, clean up, or paraphrase anything in the FULL TRANSCRIPT section.
 - Mark unclear audio as [inaudible].
 - Output markdown only. No preamble, no commentary before or after the document.
+
+Long videos: if the video is longer than 15 minutes, do NOT transcribe it verbatim end to end. Instead give a section-by-section breakdown (with timestamps) where each section gets a tight summary plus the most important lines quoted verbatim. Keep total output well under the length limit so nothing gets cut off.

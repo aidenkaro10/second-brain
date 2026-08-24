@@ -37,3 +37,5 @@ Constraints:
 - Never invent content the video does not contain. Definitions and formulas must be faithful to what is said or shown.
 - Mark unclear audio as [inaudible].
 - Output markdown only, no preamble, no closing remarks.
+
+Long videos: if the video is longer than 15 minutes, do NOT transcribe it verbatim end to end. Instead give a section-by-section breakdown (with timestamps) where each section gets a tight summary plus the most important lines quoted verbatim. Keep total output well under the length limit so nothing gets cut off.

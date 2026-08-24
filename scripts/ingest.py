@@ -164,18 +164,40 @@ def gemini_client():
     return genai.Client(api_key=GEMINI_API_KEY)
 
 
+def response_text_or_reason(response):
+    """Gemini's text, or a useful error naming WHY it came back empty."""
+    text = response.text
+    if text and text.strip():
+        return text
+    reason = "unknown"
+    try:
+        c = (response.candidates or [None])[0]
+        if c is not None and c.finish_reason:
+            reason = str(c.finish_reason)
+    except Exception:
+        pass
+    raise RuntimeError("Gemini returned an empty response (finish reason: %s)" % reason)
+
+
 def extract_youtube(url, prompt):
     """YouTube: Gemini accepts the URL directly, no download needed."""
     from google.genai import types
     client = gemini_client()
-    response = client.models.generate_content(
-        model=GEMINI_MODEL,
-        contents=[
-            types.Part(file_data=types.FileData(file_uri=url)),
-            prompt,
-        ],
-    )
-    return response.text
+    last_err = None
+    for attempt in range(2):  # one retry, empty responses are often flukes
+        try:
+            response = client.models.generate_content(
+                model=GEMINI_MODEL,
+                contents=[
+                    types.Part(file_data=types.FileData(file_uri=url)),
+                    prompt,
+                ],
+            )
+            return response_text_or_reason(response)
+        except RuntimeError as e:
+            last_err = e
+            time.sleep(10)
+    raise last_err
 
 
 def extract_downloaded(url, prompt):
