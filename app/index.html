@@ -395,6 +395,25 @@
     chipsEl.classList.toggle("has-files", pending.length > 0);
   }
 
+
+  // Cmd+V a screenshot anywhere on the page and it becomes an attachment.
+  document.addEventListener("paste", async (e) => {
+    const items = e.clipboardData && e.clipboardData.items;
+    if (!items) return;
+    let added = false;
+    for (const item of items) {
+      if (item.kind === "file" && item.type.startsWith("image/")) {
+        const f = item.getAsFile();
+        if (!f) continue;
+        const ext = (item.type.split("/")[1] || "png").replace("jpeg", "jpg");
+        pending.push({ name: "pasted-" + new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-") + "." + ext,
+                       mime: item.type, data: await fileToBase64(f) });
+        added = true;
+      }
+    }
+    if (added) { e.preventDefault(); renderChips(); input.focus(); }
+  });
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const question = input.value.trim();
