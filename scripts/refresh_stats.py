@@ -16,13 +16,17 @@ Or let cron run it weekly (see README).
 import json
 import re
 import sys
-from datetime import date
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import ingest  # reuse its yt-dlp options (Instagram login, etc.)
+
+# Videos stop moving after about two weeks, so only re-check recent ones.
+# Older videos keep whatever numbers they last had (their final numbers).
+FRESH_DAYS = 14
 
 LOG_FILE = ROOT / "content" / "wiki" / "my-videos.md"
 HISTORY_FILE = ROOT / "content" / "video-stats.json"
@@ -83,7 +87,16 @@ def write_table(history):
         if not checks:
             continue
         latest = checks[-1]
+        # A video older than FRESH_DAYS is done moving; its numbers are final.
+        settled = False
+        try:
+            from datetime import datetime as _dt
+            settled = (_dt.strptime(entry.get("posted", ""), "%Y-%m-%d").date()
+                       < date.today() - timedelta(days=FRESH_DAYS))
+        except Exception:
+            pass
         rows.append({
+            "settled": settled,
             "posted": entry.get("posted", ""),
             "title": entry.get("title", url),
             "series": entry.get("series", ""),
@@ -115,7 +128,7 @@ def write_table(history):
             r["posted"], title, r["url"], r["series"] or "-",
             fmt(r.get("view_count")), fmt(r.get("like_count")),
             fmt(r.get("comment_count")), fmt(r.get("repost_count")),
-            r["checked"]))
+            r["checked"] + (" (final)" if r.get("settled") else "")))
 
     # Growth since the first check, so it's clear what is still climbing.
     lines += ["", "## Growth since first check", ""]
@@ -149,10 +162,25 @@ def main():
     history = load_history()
     today = date.today().isoformat()
 
+    cutoff = date.today() - timedelta(days=FRESH_DAYS)
+    skipped = 0
+
     for v in videos:
         url = v["url"]
         entry = history.setdefault(url, {"checks": []})
         entry.update({"posted": v["posted"], "title": v["title"], "series": v["series"]})
+
+        # Skip old videos, but always check a video at least once so it
+        # has numbers even if it was added to the log late.
+        if entry["checks"]:
+            try:
+                posted = datetime.strptime(v["posted"], "%Y-%m-%d").date()
+            except ValueError:
+                posted = None
+            if posted and posted < cutoff:
+                skipped += 1
+                continue
+
         try:
             stats = fetch_stats(url)
         except Exception as e:
@@ -165,9 +193,13 @@ def main():
             v["title"][:40], fmt(stats.get("like_count")),
             fmt(stats.get("comment_count")), fmt(stats.get("view_count"))))
 
+    if skipped:
+        print("\nSkipped %d video(s) older than %d days (numbers already settled)."
+              % (skipped, FRESH_DAYS))
+
     HISTORY_FILE.write_text(json.dumps(history, indent=2))
     write_table(history)
-    print("\nWrote %s" % TABLE_FILE.relative_to(ROOT))
+    print("Wrote %s" % TABLE_FILE.relative_to(ROOT))
 
 
 if __name__ == "__main__":
