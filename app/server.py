@@ -29,8 +29,14 @@ ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-sonnet-5")
 VAULTS = ("school", "content", "business")
 
 # Keep the context we send to Claude under roughly this many characters
-# so we never blow past the model's input limit.
-MAX_CONTEXT_CHARS = 100_000
+# so we never blow past the model's input limit. Roughly 4 chars per token,
+# so 320k chars is about 80k tokens: plenty of room, still affordable.
+MAX_CONTEXT_CHARS = 320_000
+
+# No single file may eat more than this much of the budget. Without this,
+# one huge file (like a whole book's notes) starves every other file and
+# the wiki looks half-missing to the model.
+MAX_CHARS_PER_FILE = 40_000
 
 app = Flask(__name__)
 
@@ -83,15 +89,29 @@ def build_context(vault, query):
     """
     parts = []
     base = ROOT / vault
+    # These three always go in: the rules, the map, and his profile.
     parts.append("### %s/CLAUDE.md\n\n%s" % (vault, read_if_exists(base / "CLAUDE.md")))
     parts.append("### %s/wiki/index.md\n\n%s" % (vault, read_if_exists(base / "wiki" / "index.md")))
     parts.append("### %s/wiki/overview.md\n\n%s" % (vault, read_if_exists(base / "wiki" / "overview.md")))
 
+    used = sum(len(p) for p in parts)
     total_score = 0
-    for score, path in matched_wiki_files(vault, query)[:8]:
-        total_score += score
+
+    # Every wiki file, best match first, until the budget runs out.
+    # A single oversized file gets trimmed instead of crowding out the rest.
+    for score, path in matched_wiki_files(vault, query):
+        text = read_if_exists(path)
+        if len(text) > MAX_CHARS_PER_FILE:
+            text = (text[:MAX_CHARS_PER_FILE]
+                    + "\n\n[... file trimmed here to leave room for other notes. "
+                      "Say so if the answer needs the rest of this file.]")
         rel = path.relative_to(ROOT)
-        parts.append("### %s\n\n%s" % (rel, read_if_exists(path)))
+        block = "### %s\n\n%s" % (rel, text)
+        if used + len(block) > MAX_CONTEXT_CHARS:
+            continue   # too big for what's left; smaller files may still fit
+        parts.append(block)
+        used += len(block)
+        total_score += score
 
     return "\n\n---\n\n".join(parts), total_score
 
@@ -225,7 +245,7 @@ def chat():
         context, _ = build_context(vault, question)
         suggested_vault = vault
 
-    context = context[:MAX_CONTEXT_CHARS]
+    # Safety net only; build_context already keeps each vault in budget.\n    context = context[:MAX_CONTEXT_CHARS * 3]
 
     system_prompt = (
         read_if_exists(ROOT / "CLAUDE.md") + "\n\n"
