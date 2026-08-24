@@ -316,6 +316,40 @@ def process_document(file_id, filename, vault, kind, caption=""):
     return path
 
 
+
+def process_voice(file_id, mime, vault_hint=None):
+    """
+    A voice memo sent to the bot: Gemini transcribes it and decides which
+    vault it belongs to (unless a #tag already said). Saves the transcript
+    and key points as a note.
+    """
+    from google.genai import types
+    data, _ = download_telegram_file(file_id)
+    prompt = (PROMPT_DIR / "gemini-voice.md").read_text()
+    prompt += "\nToday's date is: %s\n" % date.today().isoformat()
+    client = gemini_client()
+    response = client.models.generate_content(
+        model=GEMINI_MODEL,
+        contents=[types.Part.from_bytes(data=data, mime_type=mime or "audio/ogg"), prompt],
+    )
+    text = response.text
+    if not text or not text.strip():
+        raise RuntimeError("Gemini returned an empty response for the voice note")
+
+    # A #tag in a caption wins; otherwise use the vault Gemini picked.
+    vault = vault_hint
+    if not vault:
+        m = re.search(r"#\s*VAULT\s*\n+\s*(school|business|content)", text, re.IGNORECASE)
+        vault = m.group(1).lower() if m else DEFAULT_VAULT
+
+    # Name the note after the first few transcript words.
+    tm = re.search(r"#\s*TRANSCRIPT\s*\n+(.+)", text)
+    slug = slugify(" ".join(tm.group(1).split()[:5])) if tm else "voice-note"
+    path = unique_path(ROOT / vault / "raw", "%s-%s.md" % (date.today().isoformat(), slug or "voice-note"))
+    path.write_text(text)
+    return path, vault
+
+
 # ---------- Compilation ----------
 
 def trigger_compile():
@@ -366,6 +400,26 @@ def parse_message(text):
         vault = "content" if tag == "advice" else tag
         kind = tag
     return url, vault, kind
+
+
+
+def video_key(url):
+    """
+    A stable identity for a video so the same one never gets saved twice,
+    even via different share links. Uses yt-dlp's extractor + video id;
+    falls back to the URL itself.
+    """
+    try:
+        from yt_dlp import YoutubeDL
+        opts = ydl_opts_for(url)
+        opts["skip_download"] = True
+        with YoutubeDL(opts) as ydl:
+            info = ydl.extract_info(url, download=False, process=False)
+        if info and info.get("id"):
+            return "%s:%s" % (info.get("extractor_key", "?"), info["id"])
+    except Exception:
+        pass
+    return url.split("?")[0].rstrip("/")
 
 
 def process_link(url, vault, kind=None):
@@ -458,6 +512,25 @@ def main():
         elif (message.get("document") or {}).get("mime_type", "").startswith("image/"):
             photo_id = message["document"]["file_id"]
 
+        # Voice memos: transcribe and auto-route to the right vault.
+        voice = message.get("voice") or message.get("audio") or {}
+        if voice and not url:
+            # Only trust the vault if the user actually typed a tag.
+            hint = kind if re.search(r"#(school|content|business|advice)", text.lower()) else None
+            if hint == "advice":
+                hint = "content"
+            try:
+                print("Processing voice note")
+                path, chosen = process_voice(voice["file_id"], voice.get("mime_type"), vault_hint=hint)
+                reply("Saved voice note: %s (%s vault)" % (path.name, chosen))
+                saved_any = True
+            except Exception as e:
+                print("Failed on voice note: %s" % e)
+                reply("Failed on voice note\nError: %s" % e)
+            state["processed_message_ids"].append(msg_id)
+            save_state(state)
+            continue
+
         # Documents: PDFs and text files get read by Gemini too.
         doc = message.get("document") or {}
         doc_mime = doc.get("mime_type", "")
@@ -495,8 +568,19 @@ def main():
 
         # One bad link must never kill the whole run.
         try:
+            key = video_key(url)
+            seen = state.setdefault("processed_videos", {})
+            if key in seen:
+                reply("Already saved that one as %s. Skipping." % seen[key])
+                state["processed_message_ids"].append(msg_id)
+                save_state(state)
+                continue
             print("Processing %s -> %s vault" % (url, vault))
             path = process_link(url, vault, kind)
+            seen[key] = path.name
+            if len(seen) > 500:
+                for k in list(seen)[:-500]:
+                    del seen[k]
             reply("Saved: %s (%s vault)" % (path.name, vault))
             saved_any = True
         except Exception as e:
