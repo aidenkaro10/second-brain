@@ -26,13 +26,26 @@ Hooks that open with a promise to reveal something or tease an intriguing subjec
 - Borrowed authority: the video's credibility rides on Karpathy's reputation before the creator has said anything about himself.
 - Immediately backed up with a resume/tweet/thumbnail montage that proves the "mythical" claim.
 
+### "Today, I'm going to teach you everything you need to know to get started with Git" (YouTube, GitHub)
+
+> **Spoken:** "Today, I'm going to teach you everything you need to know to get started with Git. If you're an absolute beginner, this video will help you feel more confident installing, configuring, and understanding Git and version control."
+>
+> **On-screen text:** "GitHub for Beginners | A brief introduction to Git for beginners"
+
+**Why it works:**
+- Promises total, beginner-friendly mastery ("everything you need to know") right away, setting a clear value expectation for the full 50-minute watch.
+- Names the exact outcome (confidence installing, configuring, and understanding Git) so viewers self-select in immediately.
+- On-screen title reinforces the same promise for anyone watching muted.
+
 ## Related
 
 - Contrast with [[contrarian]] — that type opens by attacking a belief; this type teases something worth knowing.
 - Contrast with [[question]] — that type poses a literal question; this type makes a statement that implies one.
-- Both examples are part of alexxubuilds' explainer/challenge format — see [[formats]].
+- Both alexxubuilds examples are part of its explainer/challenge format — see [[formats]].
+- The GitHub example is part of a long-form tutorial format — see [[formats]].
 
 ## Sources
 
 - 2026-08-20-alexxubuilds.md
 - 2026-08-20-alexxubuilds-4.md
+- 2026-08-24-github.md

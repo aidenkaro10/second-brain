@@ -412,14 +412,16 @@ def parse_message(text):
     Pull the link and the tag out of a Telegram message.
     Returns (url, vault, kind). The kind picks the extraction prompt:
     #advice saves to the content vault but extracts lessons, not hooks.
+    #mine also saves to the content vault: it is one of Aiden's OWN videos,
+    logged into his posting record instead of studied as someone else's.
     """
     url_match = re.search(r"https?://\S+", text)
     url = url_match.group(0) if url_match else None
     vault, kind = DEFAULT_VAULT, DEFAULT_VAULT
-    tag_match = re.search(r"#(school|content|business|advice)", text.lower())
+    tag_match = re.search(r"#(school|content|business|advice|mine)", text.lower())
     if tag_match:
         tag = tag_match.group(1)
-        vault = "content" if tag == "advice" else tag
+        vault = "content" if tag in ("advice", "mine") else tag
         kind = tag
     return url, vault, kind
 
@@ -468,6 +470,8 @@ def process_link(url, vault, kind=None):
 
     # Save to the vault's raw/ folder as YYYY-MM-DD-{creator-or-slug}.md
     creator = get_creator_slug(url)
+    if kind == "mine":
+        creator = "mine-%s" % creator   # my own posts are marked in the filename
     filename = "%s-%s.md" % (date.today().isoformat(), creator)
     path = unique_path(ROOT / vault / "raw", filename)
     path.write_text(markdown)
@@ -584,7 +588,7 @@ def main():
 
         if not url:
             reply("No link, photo, or file found in that message. Send a link, a photo, or a PDF, "
-                  "optionally with #school, #content, #business, or #advice.")
+                  "optionally with #school, #content, #business, #advice, or #mine.")
             state["processed_message_ids"].append(msg_id)
             continue
 

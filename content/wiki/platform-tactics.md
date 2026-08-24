@@ -26,10 +26,24 @@ Seen in the @alexxubuilds daily-challenge videos: an on-screen counter like "Try
 
 **Why it works:** signals real accumulated proof (this is video 16 of a promised 30) before the viewer has heard a word, which builds credibility for that day's specific claim and invites binge-watching the rest of the series.
 
+## YouTube
+
+### Modular chapter / title-card structure
+
+Seen in GitHub's "GitHub for Beginners" tutorial: on-screen title cards mark each new chapter (What is Git?, Installing Git, Branching & Collaboration, etc.) across a 50-minute video.
+
+**Why it works:** breaks a long tutorial into skippable, bookmarkable mini-lessons, so viewers can jump to the part they need instead of abandoning the whole video — helps watch time on long-form content.
+
+### Relatable analogies for abstract concepts
+
+Same video explains version control and branching with familiar analogies (resume draft versions, "a copy of a document").
+
+**Why it works:** translates abstract technical ideas into something every viewer already understands, so beginners don't bounce off jargon in the first few minutes.
+
 ## Related
 
 - [[hooks/contrarian]] and [[hooks/motivational]] for the openings of the swerikcodes/alexeubank2-0 videos.
-- [[hooks/curiosity-gap]] and [[hooks/question]] for the openings of the alexxubuilds videos.
+- [[hooks/curiosity-gap]] and [[hooks/question]] for the openings of the alexxubuilds and GitHub videos.
 - [[formats]] for their overall structure.
 - [[ctas]] for the follow prompts paired with the day-count overlay.
 
@@ -40,3 +54,4 @@ Seen in the @alexxubuilds daily-challenge videos: an on-screen counter like "Try
 - 2026-08-20-alexeubank2-0-2.md
 - 2026-08-20-alexxubuilds-3.md
 - 2026-08-20-alexxubuilds-4.md
+- 2026-08-24-github.md

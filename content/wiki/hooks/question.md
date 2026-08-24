@@ -29,7 +29,7 @@ Hooks that open with a direct question posing a challenge, usually one the creat
 ## Related
 
 - Contrast with [[curiosity-gap]] — that type teases with a statement; this type poses the challenge as a literal question.
-- Both examples kick off alexxubuilds' daily challenge series — see [[formats]] and [[ctas]].
+- All three examples kick off a daily challenge series — see [[formats]] and [[ctas]].
 
 ## Sources
 

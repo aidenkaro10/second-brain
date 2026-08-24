@@ -56,25 +56,11 @@ A multi-video series: one kickoff video states a timed challenge, then daily fol
 - Daily videos are low-effort to produce (same prop, same recap-graphics-CTA shape) but each one teaches one real concept, so it reads as educational instead of pure diary content.
 - The on-screen progress counter ("Day 16/30") signals real accumulated proof — see [[platform-tactics]].
 
-## Talking head + actionable checklist overlays (✅/❌)
-
-Direct-to-camera talking head that breaks its advice into a numbered checklist, popping up a ✅ (do this) / ❌ (not this) graphic for each point. Seen in the amelia-willingham-gonzamonte-social-medi "Why Alex Hormozi is NOT going viral anymore" Instagram Reel.
-
-**Structure of the example (0:51 total):**
-1. 0:00-0:08 contrarian hook + visual proof of Hormozi's plain-edit content ([[hooks/contrarian]])
-2. 0:08-0:23 reframe: virality vs. more business, text overlay "Virality 👎 / More business 👍"
-3. 0:23-0:51 three-tip checklist, one ✅/❌ graphic per tip: help vs. algorithm-hacking, authentic vs. viral formats, perspective vs. information
-
-**Why it works:**
-- Turns a subjective opinion into a clear, memorizable checklist — viewers walk away with 3 concrete dos/don'ts instead of a vague point.
-- ✅/❌ icons are near-instant to parse, so the framework reads even muted or at a glance.
-- Each tip restates the same "true value vs. surface metric" idea from a different angle (algorithm, formats, information), reinforcing the hook's thesis three times without feeling repetitive.
-
 ## Related
 
 - [[hooks/contrarian]] for how the swerikcodes and Hormozi examples open.
 - [[hooks/motivational]] for how the alexeubank2-0 example opens.
-- [[hooks/curiosity-gap]] and [[hooks/question]] for how the alexxubuilds examples open.
+- [[hooks/curiosity-gap]] and [[hooks/question]] for how the alexxubuilds and GitHub examples open.
 - [[platform-tactics]] for the retention devices layered on top of all of these.
 - [[ctas]] for how the alexxubuilds examples close.
 
@@ -88,3 +74,4 @@ Direct-to-camera talking head that breaks its advice into a numbered checklist, 
 - 2026-08-20-alexxubuilds-3.md
 - 2026-08-20-alexxubuilds-4.md
 - 2026-08-21-amelia-willingham-gonzamonte-social-medi.md
+- 2026-08-24-github.md

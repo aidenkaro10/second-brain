@@ -12,15 +12,11 @@ This file is about MY content plans, not the videos I study (those live in the p
 - Business plan: personal brand runs solo for now; when the product launches, will create a separate page for the business. Roy Lee/Cluely is referenced only as an example of keeping personal brand and product brand distinct, not a strict model to copy.
 - Now in a new era: left NYC, now in Gainesville, FL. The NYC content run is over ("that didn't exactly work").
 - Moved best videos onto a fresh Instagram account so friends following weren't shaping the algorithm/positioning.
-- Technical background going into the new series: knows basic Python, and has hands-on "vibe coding" (AI-assisted building) schemas/heuristics from a lot of practice — no CS degree, no company, no formal programming knowledge beyond that.
+- Technical background going into the new series: knows basic Python, and has hands-on "vibe coding" (AI-assisted building) schemas/heuristics from a lot of practice — no CS degree, no company, no formal programming knowledge beyond that. Has an existing ManyChat subscription available as a tool for potential builds.
 
 ## Content plan
 
 - Series decided: 30-day learn-in-public series (dropped the "100 days" framing). Hook: "no CS degree, no company, NYC didn't work out — building the skills anyway." Framed as "Can I build the skills needed to be an AI startup founder in 30 days?"
 - Format habit being adopted from alexxubuilds: each post explains one concept clearly enough for a stranger to learn something — not diary/day-count content. Guardrails: only explain things actually built and gotten working (never things just read about), and say plainly when unsure to invite correction instead of criticism. This guardrail is the core credibility mechanism since he has no other authority proof besides the JS jacket — the working code on screen is the proof.
-- Rollout plan: series starts at Day 0 (kickoff/setup video), with Day 1 as the next episode — day counter is the main credibility signal from the start, proving work happened before he's said a word.
-- Plans during the 30 days include attending hackathons in addition to self-directed learning/building.
-- Lane locked in: building real apps with AI tooling and explaining what it actually generated (leans on Python + vibe-coding background, undersupplied niche vs. generic "learning to code").
-- Earlier launch arc: Week 1 of philosophy/worldview videos about me → NYC/Jane Street AMP content for authority (single JS jacket reveal moment, not daily wear) → then the build series.
-- Content pillars: build, mindset, business insight — alternating, never two of the same in a row.
-- Posting cadence: has done 3–4
+- Rollout plan: series starts at Day 0 (kickoff/setup video), with Day 1 as the next episode — day counter is the main credibility signal from the start. Day 0 has been filmed and posted. Day 0 video names the skills/tools he plans to learn (Python, Cursor, LangChain, SQL, Git) and two hackathons he plans to attend over the 30 days (SwampHacks, HopHacks).
+- Day 1 topic still being decided: considered making GitHub itself the topic after watching a 50-min tutorial video, but this was flagged as breaking his own guardrail (explaining something learned from a video, not something he actually built) and being a vague deliverable ("document of commands" / "tool that helps with GitHub"). Direction being worked out: build something real with GitHub first (e.g., tied to the ManyChat automation), get it working, then make the video about that specific build — not GitHub in the abstract. No final Day 1 topic loc
