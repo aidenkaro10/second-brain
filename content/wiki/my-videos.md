@@ -2,9 +2,10 @@
 
 A running log of videos I posted. Newest first. My own posts live here, not in the pattern files (those hold other creators' work, which is what I study).
 
-## 2026-08-24 — "Is it possible to build the skills necessary to be a startup founder in 30 days?" (Instagram)
+## 2026-08-23 — "Is it possible to build the skills necessary to be a startup founder in 30 days?" (Instagram)
 
 - **Link:** https://www.instagram.com/reel/DcXyTuhxIrh/
+- **Posted:** 2026-08-23
 - **Series/day:** Day 0/30, the kickoff of the 30-day learn-in-public series
 - **Length:** 0:21
 

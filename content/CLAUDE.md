@@ -32,20 +32,26 @@ Some raw files are ADVICE about making content, not viral examples. You can tell
 
 Raw files whose names start with `mine-` are videos Aiden POSTED himself, not videos he studies. They get their own record, never scattered into the pattern files.
 
-Keep one file: `wiki/my-videos.md`, a running log with the newest post at the top:
+Keep one file: `wiki/my-videos.md`, ordered by the date he POSTED each video (from the raw file's `date_posted`, not when he saved it), newest at the top. Each entry:
 
 ```
-## YYYY-MM-DD — <hook line or topic> (<platform>)
+## YYYY-MM-DD — <hook line or topic> (<platform>, <length>)
 - Link: <url>
 - Series/day: <e.g. Day 0/30, or "one-off">
-- Hook (verbatim): "..."
-- Format and techniques used: ... (link the pattern files with [[wikilinks]])
-- Critique: what worked, what to fix next time
+- Hook (verbatim): spoken + on-screen text
+- Transcript: the full verbatim transcript
+- Structure: the beats with timestamps
+- Editing: cut rate, caption style, overlays, graphics, transitions, audio, look
+- Delivery: how he performed on camera
+- Techniques used: named plainly, with [[wikilinks]] to the pattern files
+- Critique: the honest critique from the raw file, kept in full
 - Performance: (blank until Aiden reports numbers)
 ```
 
 Rules:
-1. Never rewrite past entries. Corrections and results get appended to that entry.
-2. When Aiden reports view counts or results in chat, fill in that entry's Performance line.
-3. Techniques he uses link to the pattern files ([[hooks/question]], [[formats]], [[platform-tactics]]), but his own videos are NOT added as examples inside those pattern files. Those hold other creators' work.
-4. Keep `wiki/index.md` listing my-videos.md.
+1. Keep the full transcript and the full critique. This file is his archive of his own work, so detail is the point. It is fine for it to get long; split into `my-videos/` per month if it becomes unwieldy.
+2. Never rewrite past entries. Corrections and results get appended to that entry.
+3. When Aiden reports view counts or results in chat, fill in that entry's Performance line.
+4. Techniques link to the pattern files ([[hooks/question]], [[formats]], [[platform-tactics]]), but his own videos are NOT added as examples inside those pattern files. Those hold other creators' work.
+5. At the top of `my-videos.md`, keep a short **Patterns in my own work** section: what he repeats across videos, what the critiques keep flagging, and what has changed over time. Update it as new videos come in.
+6. Keep `wiki/index.md` listing my-videos.md.

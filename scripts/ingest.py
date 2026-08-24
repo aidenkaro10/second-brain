@@ -128,23 +128,47 @@ def ydl_opts_for(url):
     return opts
 
 
-def get_creator_slug(url):
+# Remembers metadata per URL so one link never costs two lookups.
+_meta_cache = {}
+
+
+def video_meta(url):
     """
-    Ask yt-dlp for the video's metadata (no download) to get the creator name.
-    Falls back to a slug made from the URL if that fails.
+    Ask yt-dlp for a video's metadata (no download): who posted it and when.
+    Returns {"creator": slug, "posted": "YYYY-MM-DD" or None}.
+    Falls back to a slug made from the URL if the lookup fails.
     """
+    if url in _meta_cache:
+        return _meta_cache[url]
+
+    meta = {"creator": None, "posted": None}
     try:
         from yt_dlp import YoutubeDL
         with YoutubeDL(ydl_opts_for(url)) as ydl:
             info = ydl.extract_info(url, download=False)
         creator = info.get("uploader") or info.get("channel") or info.get("uploader_id")
         if creator:
-            return slugify(str(creator))
+            meta["creator"] = slugify(str(creator))
+        # yt-dlp gives the upload date as YYYYMMDD.
+        raw_date = info.get("upload_date")
+        if raw_date and len(str(raw_date)) == 8:
+            d = str(raw_date)
+            meta["posted"] = "%s-%s-%s" % (d[:4], d[4:6], d[6:])
     except Exception:
         pass
-    # Fallback: use the last meaningful chunk of the URL.
-    tail = url.rstrip("/").split("/")[-1].split("?")[0]
-    return slugify(tail)
+
+    if not meta["creator"]:
+        # Fallback: use the last meaningful chunk of the URL.
+        tail = url.rstrip("/").split("/")[-1].split("?")[0]
+        meta["creator"] = slugify(tail)
+
+    _meta_cache[url] = meta
+    return meta
+
+
+def get_creator_slug(url):
+    """Just the creator name. Kept for the other callers."""
+    return video_meta(url)["creator"]
 
 
 def unique_path(folder, filename):
@@ -449,12 +473,15 @@ def video_key(url):
 def process_link(url, vault, kind=None):
     """Run the whole pipeline for one link. Returns the saved note's filename."""
     prompt = prompt_for_vault(kind or vault)
+    meta = video_meta(url)
     # Give Gemini the facts it can't know on its own, for the frontmatter:
-    # the source URL, today's real date, and the creator handle from yt-dlp.
+    # the source URL, today's date, the creator, and the real upload date.
     prompt = prompt + (
         "\n\nThe video URL is: %s\nToday's date is: %s\nThe creator is: %s\n"
-        % (url, date.today().isoformat(), get_creator_slug(url))
+        % (url, date.today().isoformat(), meta["creator"])
     )
+    if meta["posted"]:
+        prompt += "The video was posted on: %s\n" % meta["posted"]
 
     platform = detect_platform(url)
     if platform == "unknown":
@@ -468,11 +495,15 @@ def process_link(url, vault, kind=None):
     if not markdown or not markdown.strip():
         raise RuntimeError("Gemini returned an empty response")
 
-    # Save to the vault's raw/ folder as YYYY-MM-DD-{creator-or-slug}.md
-    creator = get_creator_slug(url)
+    # Save to the vault's raw/ folder as YYYY-MM-DD-{creator-or-slug}.md.
+    # My own videos are named by the day I POSTED them, not the day I saved
+    # them, so uploading a backlog still lands in the right order.
+    creator = meta["creator"]
+    stamp = date.today().isoformat()
     if kind == "mine":
-        creator = "mine-%s" % creator   # my own posts are marked in the filename
-    filename = "%s-%s.md" % (date.today().isoformat(), creator)
+        creator = "mine-%s" % creator
+        stamp = meta["posted"] or stamp
+    filename = "%s-%s.md" % (stamp, creator)
     path = unique_path(ROOT / vault / "raw", filename)
     path.write_text(markdown)
     return path
