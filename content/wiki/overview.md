@@ -14,10 +14,10 @@ This file is about MY content plans, not the videos I study (those live in the p
 - Moved best videos onto a fresh Instagram account so friends following weren't shaping the algorithm/positioning.
 - Technical background going into the new series: knows basic Python, and has hands-on "vibe coding" (AI-assisted building) schemas/heuristics from a lot of practice — no CS degree, no company, no formal programming knowledge beyond that. Has an existing ManyChat subscription available as a tool for potential builds.
 - Already knew GitHub going into the Day 1 video — he is not learning it live, he's explaining it to viewers who don't know it.
+- Has a reference doc in his content vault, `marketing-book-notes.md`, containing his notes on Building a StoryBrand, Obviously Awesome, and Made to Stick — used as the source for his content's messaging/storytelling technique (e.g. picking the "Made to Stick" simple analogy method for Day 1).
 
 ## Content plan
 
 - Series decided: 30-day learn-in-public series (dropped the "100 days" framing). Hook: "no CS degree, no company, NYC didn't work out — building the skills anyway."
 - Explicit format clarification: this is a learn-and-share format, not a build-and-prove format. Plan is to build authority by learning skills (getting more technical) and sharing what he learned with his audience — not by showing proof of already-built products.
-- Day 1 locked in: GitHub explainer, made-to-stick style (simple analogy, not jargon). Gives viewers a takeaway (shortlist of commands or a small resource). Openly mentions it's from a video he watched (fits the learning-in-public honesty angle — his source video was from a GitHub account). Ends with a tease of what he'll use GitHub for next, tying forward into the ManyChat build.
-- Day 1 hook direction under revision: the "I didn't know, so I'm finding out" question hook was dropped because it's not true — Aiden already knew GitHub before
+- Day 1 locked in: GitHub explainer, made-to-stick style (sim

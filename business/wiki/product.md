@@ -66,8 +66,42 @@ AI-assisted ("vibe coded") apps often end up looking visually generic and unrefi
 - Copy a Motion Sites layout prompt into the coding agent instead of letting it default to a generic hero section.
 - Pull in 21st.dev components and Layer micro-animations for Rekko's UI instead of leaving default AI-generated interactions.
 
+## The 3 levels of vibe coders
+
+AI-assisted coding ("vibe coding") splits into three skill levels, from generic AI output to production-quality code.
+
+> "The 3 Levels of Vibe Coders"
+
+- **Level 1** — basic prompts, no planning, no guidance files. Produces "AI slop": generic gradient text, scroll animations, side-tap borders.
+  > "That landing page has typical patterns of AI like gradient text, scroll animations, and side tap borders."
+  - Doesn't use `Agent.md` files or custom AI skills to steer the model.
+  - Skips plan mode before implementing new features.
+
+- **Level 2** — adds structure: a UI design base, basic AI skills, and plan-before-execute mode.
+  > "Use shadcn for the base of the UI"
+  - Builds UI on a design system like `shadcn` so the AI isn't rebuilding UI logic from scratch.
+  - Adds basic AI skills via CLI (e.g. `npx skills add ... --skill frontend-design` or `--skill shadcn`).
+  - Uses Plan Mode for complex features: 1) Plan Mode, 2) Read/review plan, 3) Approve plan before it runs.
+  > "Plan mode for complex features: 1. Plan Mode, 2. Read/Review Plan, 3. Approve Plan"
+
+- **Level 3** — advanced AI agent skills, tech-specific skill extensions, and proven libraries instead of custom-built logic.
+  - Integrates advanced skill libraries (e.g. Matt Pocock skills, Anthropic's Claude Code security review plugin).
+  - Installs official skills for the exact stack in use (e.g. Supabase agent skills, Convex agent skills).
+  > "Add official skills for installed tech"
+  - Searches for existing proven libraries rather than having the AI rebuild everything from scratch.
+  > "They try to search for existing proven libraries rather than have AI rebuild everything from scratch."
+
+**How to apply:**
+- Set up a `shadcn` (or similar) UI base before generating any screens, so the AI styles within a system instead of freestyling.
+- Turn on plan mode for any non-trivial feature: make Claude Code plan first, read the plan, then approve before it writes code.
+- Install official Claude Code skills for whatever backend Rekko is actually using (Supabase, Convex, etc.) instead of letting the AI hand-roll that logic.
+- Before asking AI to build something from scratch, check if a proven library already does it.
+
+See also "Avoid AI slop UI in vibe-coded apps" above — same problem (generic AI output), different fix (workflow discipline vs. design resources).
+
 ## Sources
 
 - 2026-08-21-kayvon-jafarzadeh.md
 - 2026-08-21-vardhan-agnihotri.md
 - 2026-08-24-ranveer-singh.md
+- 2026-08-24-nico-burkart.md

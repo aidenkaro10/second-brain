@@ -12,3 +12,4 @@
 - [[marketing-book-notes]] — Aiden's own book notes (Building a StoryBrand and more), imported verbatim from Google Docs.
 - [[strategy/audience-psychology]] — advice: mapping audience psychology (likes/dislikes/interests/values) and the stop-retain-act engagement framework.
 - [[strategy/algorithm]] — advice: the 200-viewer sample test, the 3 metrics that decide reach, and "200 view jail."
+- [[strategy/scripting]] — advice: the compare/but-therefore-transitions/slogan framework for retention-focused scripts.
