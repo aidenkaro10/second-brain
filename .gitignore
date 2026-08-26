@@ -18,3 +18,6 @@ scripts/.ingest_state.json
 # macOS
 .DS_Store
 scripts/.ingest_lock
+
+# Obsidian workspace settings (personal, not part of the system)
+.obsidian/

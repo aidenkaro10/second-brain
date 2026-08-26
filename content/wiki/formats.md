@@ -56,6 +56,8 @@ A multi-video series: one kickoff video states a timed challenge, then daily fol
 - Daily videos are low-effort to produce (same prop, same recap-graphics-CTA shape) but each one teaches one real concept, so it reads as educational instead of pure diary content.
 - The on-screen progress counter ("Day 16/30") signals real accumulated proof — see [[platform-tactics]].
 
+**Variant seen in a Day 2 entry of a similar 30-day ML challenge** (2026-08-25-alex-xu.md, handle @alexxubytes — see [[hooks/question]] for a note on the handle mismatch with the @alexxubuilds Day 1 source above): toy microphone/speaker prop instead of a capybara plush, and near-constant math/diagram overlays (linear regression, cost function, sigmoid, gradient descent, backprop) synced to spoken terms during a desk study montage — layers the diagram-dense explainer style on top of the daily-log structure.
+
 ## Related
 
 - [[hooks/contrarian]] for how the swerikcodes and Hormozi examples open.
@@ -75,3 +77,4 @@ A multi-video series: one kickoff video states a timed challenge, then daily fol
 - 2026-08-20-alexxubuilds-4.md
 - 2026-08-21-amelia-willingham-gonzamonte-social-medi.md
 - 2026-08-24-github.md
+- 2026-08-25-alex-xu.md

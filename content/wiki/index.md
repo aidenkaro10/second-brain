@@ -13,3 +13,4 @@
 - [[strategy/audience-psychology]] — advice: mapping audience psychology (likes/dislikes/interests/values) and the stop-retain-act engagement framework.
 - [[strategy/algorithm]] — advice: the 200-viewer sample test, the 3 metrics that decide reach, and "200 view jail."
 - [[strategy/scripting]] — advice: the compare/but-therefore-transitions/slogan framework for retention-focused scripts.
+- [[strategy/video-editing-pipeline]] — advice: the 7-step Claude + Hyperframes + WhisperX + FFmpeg pipeline for automating video editing end to end.

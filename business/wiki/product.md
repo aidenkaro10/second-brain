@@ -66,6 +66,27 @@ AI-assisted ("vibe coded") apps often end up looking visually generic and unrefi
 - Copy a Motion Sites layout prompt into the coding agent instead of letting it default to a generic hero section.
 - Pull in 21st.dev components and Layer micro-animations for Rekko's UI instead of leaving default AI-generated interactions.
 
+## Avoid "AI slop" UI via agent skills + MCP
+
+Same "AI slop" problem as above, different fix: instead of pulling design inspiration from websites, equip the AI coding agent itself (Claude, Codex) with skills and MCP integrations that enforce design rules and pull real components, so it stops generating generic UI in the first place.
+
+> "This is what AI slop looks like now. And if you think you can just ask Claude to make it look better, well, you're just wasting your time."
+
+**Tools:**
+- **Impeccable skill** — detects anything that looks like AI slop on your UI and fixes it (commands like `/polish`, `/distill`, `/clarify`).
+  > "This skill will literally detect anything that looks like AI slop on your UI and fix it for you."
+- **21st.dev MCP** — plug into Codex or Claude so it pulls pre-built, high-quality UI components instead of writing everything from scratch.
+  > "Then use the 21st dev MCP. You can plug it into Codex or Claude, and it will pull beautiful UI components instead of writing everything from scratch."
+- **Vercel Web Interface Guidelines skill** — gives the agent a checklist for UX/accessibility standards on every UI it builds.
+  > "It will basically give your agent a checklist for everything it needs to get a clean UI."
+
+**How to apply:**
+- Run the Impeccable skill on existing AI-generated UI to audit and refactor it.
+- Connect 21st.dev via MCP so the agent sources real components instead of freestyling.
+- Add Vercel's Web Interface Guidelines as agent context so it follows UX/accessibility standards by default.
+
+See also "Avoid 'AI slop' UI in vibe-coded apps" above — same problem, this fix lives inside the AI agent's workflow instead of being a website you copy from.
+
 ## The 3 levels of vibe coders
 
 AI-assisted coding ("vibe coding") splits into three skill levels, from generic AI output to production-quality code.
@@ -105,3 +126,4 @@ See also "Avoid AI slop UI in vibe-coded apps" above — same problem (generic A
 - 2026-08-21-vardhan-agnihotri.md
 - 2026-08-24-ranveer-singh.md
 - 2026-08-24-nico-burkart.md
+- 2026-08-25-aimn.md

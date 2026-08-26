@@ -9,6 +9,8 @@ Seen across the @alexxubuilds daily-challenge series, closing every episode:
 > "Follow to keep up to date on this journey, and see you for Day 2." (Day 1 video)
 >
 > "Follow to stay up to date and see you for Day 17!" (Day 16 video)
+>
+> "So follow to join me on my journey and see you for Day 3!" (Day 2 video, @alexxubytes — see [[hooks/question]] for a handle mismatch note on this series)
 
 **Why it works:**
 - Promises a continuing story, not a one-off video, so following feels like joining something already in progress.
@@ -25,3 +27,4 @@ Seen across the @alexxubuilds daily-challenge series, closing every episode:
 - 2026-08-20-alexxubuilds-2.md
 - 2026-08-20-alexxubuilds-3.md
 - 2026-08-20-alexxubuilds-4.md
+- 2026-08-25-alex-xu.md

@@ -26,6 +26,16 @@ Hooks that open with a direct question posing a challenge, usually one the creat
 - "Well, I'm trying to find out" right after the hook turns the viewer into a witness to a real experiment, not a lecture.
 - "This is Day 1" anchors the question to a concrete, checkable timeline immediately.
 
+### "Is it possible to learn everything in this famous 33 hour course by Andrew Ng in one afternoon?" (Instagram, @alexxubytes)
+
+> **Spoken:** "Is it possible to learn everything in this famous 33 hour course by Andrew Ng in one afternoon?"
+>
+> **On-screen text:** same line, paired with a Coursera course screenshot.
+
+**Why it works:**
+- Same challenge-question shape as the other two, but the stakes are a named, specific external benchmark (a famous 33-hour course) instead of a vague skill claim, which makes the challenge easier to picture and judge.
+- This is "Day 2" of the same "cracked at machine learning in 30 days" series as the example above — note the on-screen handle here reads **@alexxubytes**, not @alexxubuilds as in the Day 1 source. Flagging the mismatch rather than assuming it's the same account.
+
 ## Related
 
 - Contrast with [[curiosity-gap]] — that type teases with a statement; this type poses the challenge as a literal question.
@@ -35,3 +45,4 @@ Hooks that open with a direct question posing a challenge, usually one the creat
 
 - 2026-08-20-alexxubuilds-2.md
 - 2026-08-20-alexxubuilds-3.md
+- 2026-08-25-alex-xu.md
