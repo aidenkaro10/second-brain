@@ -83,6 +83,25 @@ python3 app/server.py
 2. Open Obsidian, click **Open folder as vault**, and pick this `second-brain` folder.
 3. The `[[wikilinks]]` between notes become clickable, and the graph view shows how your knowledge connects.
 
+## Obsidian setup (optional, for browsing your notes visually)
+
+Obsidian turns this folder into a browsable, linked notebook. The `[[wikilinks]]` the compiler writes become clickable, and the graph view shows how your notes connect. Obsidian reads the same markdown files, so nothing changes about how the system works.
+
+1. Download Obsidian from https://obsidian.md and open the `.dmg`.
+2. Drag the Obsidian icon onto the Applications folder, then eject the disk image. Do not run it from the `.dmg`.
+3. Open Obsidian.
+4. On the welcome screen, click **Open** next to "Open folder as vault".
+5. In the file picker press **Cmd+Shift+G**, type the full path to this repo folder, press Enter, then click **Open**.
+6. If it asks, click **Trust author and enable plugins**.
+7. Check the bottom-left corner. It should show this folder's name. If it shows something else, click it and pick the right folder, that switcher is the vault selector.
+8. Press **Cmd+G** to open graph view. Each dot is a note, each line is a `[[wikilink]]`.
+
+Notes:
+
+- `.obsidian/` (Obsidian's own settings) is gitignored, so your workspace layout never gets pushed.
+- The graph looks sparse at first. It fills in as you send more videos and the compiler adds links between notes.
+- Everything under `raw/processed/` shows up too. Those are the full source breakdowns behind each wiki note.
+
 ## Compiling manually
 
 If the `claude` CLI wasn't available during ingest, compile any time by running this in the repo folder:
