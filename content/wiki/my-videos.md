@@ -28,10 +28,6 @@ A running log of videos I posted. Newest first. My own posts live here, not in t
 - Tool logo stacks turning an abstract "skills I'll learn" list into a concrete scannable stack ([[formats]])
 - Open-loop follow CTA ([[ctas]]): "Follow to see how much closer I'll be to a founder after another month." Frames the reward as a status change rather than naming a specific next episode, which fits a kickoff with no "Day 1" to name yet
 
-**Critique:**
-- The time-bound challenge framing creates instant follow-worthiness, and the skill-gap admission ("a little Python experience... not that much technical skill") lowers the bar for what counts as proof going forward. Both land.
-- Logo stacks promise tangible content ahead instead of vague ambition.
-- Weakest point: 21 seconds of stated intent with zero proof of work yet. Day 1 onward has to carry that, and it lines up with the guardrail of only explaining things actually built and working.
 
 **Performance:** (not reported yet)
 

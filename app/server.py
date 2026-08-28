@@ -132,7 +132,7 @@ def update_overview_from_chat(vault, question, answer):
         import anthropic
         path = ROOT / vault / "wiki" / "overview.md"
         current = read_if_exists(path)
-        client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+        client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY, timeout=600.0, max_retries=3)
         prompt = (
             "Below is Aiden's personal %s profile file, followed by one exchange "
             "from his chat app. If HIS message (not the assistant's) reveals "
@@ -276,14 +276,17 @@ def chat():
                 print("Could not save attachment: %s" % e)
 
     import anthropic
-    client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+    # Streaming with a long timeout: the wiki context is big, and a plain
+    # create() on that much input can sit until the socket times out.
+    client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY, timeout=600.0, max_retries=3)
     try:
-        response = client.messages.create(
+        with client.messages.stream(
             model=ANTHROPIC_MODEL,
             max_tokens=2000,
             system=system_prompt,
             messages=api_messages,
-        )
+        ) as stream:
+            response = stream.get_final_message()
     except anthropic.APIError as e:
         return jsonify({"error": "Anthropic API error: %s" % e}), 502
 
