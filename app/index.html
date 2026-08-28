@@ -435,9 +435,14 @@
     // History keeps a text note about the files so later turns know they existed.
     histories[askedVault].push({ role: "user", content: (question || "(see attached)") + (fileNote ? "\n[" + fileNote + "]" : "") });
 
-    const thinking = addBubble("assistant", "");
-    thinking.classList.add("thinking");
-    thinking.innerHTML = 'Thinking<span class="dots"></span>';
+    // The answer bubble appears right away and fills in as words arrive.
+    const answerBubble = addBubble("assistant", "");
+    answerBubble.classList.add("thinking");
+    answerBubble.innerHTML = 'Thinking<span class="dots"></span>';
+
+    let answer = "";
+    let meta = {};
+    let failed = null;
 
     try {
       const res = await fetch("/api/chat", {
@@ -451,27 +456,64 @@
           add_to_vault: addToVault
         })
       });
-      const data = await res.json();
-      thinking.remove();
-      if (data.error) {
-        addBubble("assistant", "Error: " + data.error);
-      } else {
-        histories[askedVault].push({
-          role: "assistant", content: data.answer,
-          question: question, suggested: data.suggested_vault
-        });
-        // Only draw the answer if the user is still on the tab they asked from.
-        if (vault === askedVault) {
-          addBubble("assistant", data.answer, true);
-          addSaveButton(question, data.answer, data.suggested_vault, askedVault);
-          if (data.saved_files && data.saved_files.length) {
-            addBubble("assistant", "Added to vault: " + data.saved_files.join(", "));
+
+      // The server sends one JSON object per line as the answer is written.
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+
+        // Everything up to the last newline is a set of complete lines.
+        const lines = buffer.split("\n");
+        buffer = lines.pop();
+
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          let msg;
+          try { msg = JSON.parse(line); } catch (e) { continue; }
+
+          if (msg.type === "delta") {
+            if (!answer) answerBubble.classList.remove("thinking");
+            answer += msg.text;
+            // Plain text while streaming, so half-written markdown never
+            // flashes weird. It gets rendered properly once finished.
+            if (vault === askedVault) {
+              answerBubble.textContent = answer;
+              messagesEl.scrollTop = messagesEl.scrollHeight;
+            }
+          } else if (msg.type === "done") {
+            meta = msg;
+          } else if (msg.type === "error") {
+            failed = msg.error;
           }
         }
       }
     } catch (err) {
-      thinking.remove();
-      addBubble("assistant", "Error: could not reach the server.");
+      failed = "could not reach the server.";
+    }
+
+    if (failed) {
+      answerBubble.classList.remove("thinking");
+      answerBubble.textContent = "Error: " + failed;
+    } else {
+      histories[askedVault].push({
+        role: "assistant", content: answer,
+        question: question, suggested: meta.suggested_vault
+      });
+      if (vault === askedVault) {
+        // Now that it is complete, render the markdown properly.
+        answerBubble.innerHTML = renderMarkdown(answer);
+        addSaveButton(question, answer, meta.suggested_vault, askedVault);
+        if (meta.saved_files && meta.saved_files.length) {
+          addBubble("assistant", "Added to vault: " + meta.saved_files.join(", "));
+        }
+      } else {
+        answerBubble.remove();   // he switched tabs mid-answer; it is saved in history
+      }
     }
     sendBtn.disabled = false;
     input.focus();

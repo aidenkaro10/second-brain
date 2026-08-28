@@ -14,6 +14,10 @@ area: (which business function this mostly concerns: marketing / sales / ops / p
 
 The main takeaway of the video in 2-4 sentences, plain language.
 
+# FULL TRANSCRIPT
+
+Every word spoken in the video, verbatim, start to finish. Do not summarize, do not paraphrase, do not clean it up. Keep filler words exactly as said. Mark unclear audio as [inaudible]. If nobody speaks, write "No speech."
+
 # KEY QUOTES
 
 The most important lines, verbatim, in quotation marks. Only lines actually spoken or shown on screen.
@@ -35,4 +39,4 @@ Constraints:
 - Mark unclear audio as [inaudible].
 - Output markdown only, no preamble, no closing remarks.
 
-Long videos: if the video is longer than 15 minutes, do NOT transcribe it verbatim end to end. Instead give a section-by-section breakdown (with timestamps) where each section gets a tight summary plus the most important lines quoted verbatim. Keep total output well under the length limit so nothing gets cut off.
+Long videos: always transcribe every word, no matter the length. For videos longer than 20 minutes, split the transcript into timestamped chunks (## 0:00-5:00, ## 5:00-10:00, and so on) so it stays organised, but never drop or summarise speech. Keep the other analysis sections brief on long videos so the transcript is what gets the room.

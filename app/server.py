@@ -10,6 +10,7 @@ Run it:  python3 app/server.py   then open http://localhost:5001
 """
 
 import base64
+import json
 import os
 import re
 import threading
@@ -17,7 +18,8 @@ from datetime import date
 from pathlib import Path
 
 from dotenv import load_dotenv
-from flask import Flask, jsonify, request, send_from_directory
+from flask import (Flask, Response, jsonify, request,
+                   send_from_directory, stream_with_context)
 
 # The repo root is one folder up from this file.
 ROOT = Path(__file__).resolve().parent.parent
@@ -245,7 +247,8 @@ def chat():
         context, _ = build_context(vault, question)
         suggested_vault = vault
 
-    # Safety net only; build_context already keeps each vault in budget.\n    context = context[:MAX_CONTEXT_CHARS * 3]
+    # Safety net only; build_context already keeps each vault in budget.
+    context = context[:MAX_CONTEXT_CHARS * 3]
 
     system_prompt = (
         read_if_exists(ROOT / "CLAUDE.md") + "\n\n"
@@ -276,32 +279,53 @@ def chat():
                 print("Could not save attachment: %s" % e)
 
     import anthropic
-    # Streaming with a long timeout: the wiki context is big, and a plain
-    # create() on that much input can sit until the socket times out.
+    # Long timeout: the wiki context is big, and a slow first token should
+    # never look like a dead connection.
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY, timeout=600.0, max_retries=3)
-    try:
-        with client.messages.stream(
-            model=ANTHROPIC_MODEL,
-            max_tokens=2000,
-            system=system_prompt,
-            messages=api_messages,
-        ) as stream:
-            response = stream.get_final_message()
-    except anthropic.APIError as e:
-        return jsonify({"error": "Anthropic API error: %s" % e}), 502
 
-    answer = "".join(block.text for block in response.content if block.type == "text")
+    def token_stream():
+        """
+        Send the answer to the browser as it is written, one chunk at a time,
+        so words appear live instead of after a long "Thinking..." wait.
+        Each line is one JSON object (NDJSON):
+          {"type":"delta","text":"..."}   a piece of the answer
+          {"type":"done", ...}            finished, with the metadata
+          {"type":"error","error":"..."}  something went wrong
+        """
+        pieces = []
+        try:
+            with client.messages.stream(
+                model=ANTHROPIC_MODEL,
+                max_tokens=2000,
+                system=system_prompt,
+                messages=api_messages,
+            ) as stream:
+                for chunk in stream.text_stream:
+                    pieces.append(chunk)
+                    yield json.dumps({"type": "delta", "text": chunk}) + "\n"
+        except Exception as e:
+            yield json.dumps({"type": "error",
+                              "error": "Anthropic API error: %s" % e}) + "\n"
+            return
 
-    # Quietly update the vault's living overview in the background so the
-    # chat reply is never slowed down.
-    threading.Thread(
-        target=update_overview_from_chat,
-        args=(suggested_vault, question, answer),
-        daemon=True,
-    ).start()
+        answer = "".join(pieces)
 
-    return jsonify({"answer": answer, "suggested_vault": suggested_vault,
-                    "saved_files": saved_files})
+        # Quietly update the vault's living overview in the background so the
+        # chat reply is never slowed down.
+        threading.Thread(
+            target=update_overview_from_chat,
+            args=(suggested_vault, question, answer),
+            daemon=True,
+        ).start()
+
+        yield json.dumps({"type": "done",
+                          "suggested_vault": suggested_vault,
+                          "saved_files": saved_files}) + "\n"
+
+    return Response(stream_with_context(token_stream()),
+                    mimetype="application/x-ndjson",
+                    headers={"Cache-Control": "no-cache",
+                             "X-Accel-Buffering": "no"})
 
 
 @app.route("/api/save", methods=["POST"])

@@ -14,6 +14,10 @@ topic: (the subject this video teaches, a few words)
 
 What this video teaches, in plain language a beginner can follow. 3-6 sentences.
 
+# FULL TRANSCRIPT
+
+Every word spoken in the video, verbatim, start to finish. Do not summarize, do not paraphrase, do not clean it up. Keep filler words exactly as said. Mark unclear audio as [inaudible]. If nobody speaks, write "No speech."
+
 # KEY CONCEPTS
 
 Each concept the video covers, one at a time:
@@ -38,4 +42,4 @@ Constraints:
 - Mark unclear audio as [inaudible].
 - Output markdown only, no preamble, no closing remarks.
 
-Long videos: if the video is longer than 15 minutes, do NOT transcribe it verbatim end to end. Instead give a section-by-section breakdown (with timestamps) where each section gets a tight summary plus the most important lines quoted verbatim. Keep total output well under the length limit so nothing gets cut off.
+Long videos: always transcribe every word, no matter the length. For videos longer than 20 minutes, split the transcript into timestamped chunks (## 0:00-5:00, ## 5:00-10:00, and so on) so it stays organised, but never drop or summarise speech. Keep the other analysis sections brief on long videos so the transcript is what gets the room.

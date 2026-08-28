@@ -72,4 +72,4 @@ Constraints:
 - The critique must be genuinely useful, not flattering. If something is weak, say exactly why and what to do instead.
 - Output markdown only, no preamble, no closing remarks.
 
-Long videos: if the video is longer than 15 minutes, keep every section above, but replace the word-for-word transcript with a timestamped section-by-section breakdown that quotes the most important lines verbatim.
+Long videos: always transcribe every word. For videos longer than 20 minutes, split the transcript into timestamped chunks (## 0:00-5:00, and so on) but never drop or summarise speech.
